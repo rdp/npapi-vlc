@@ -10,3 +10,5 @@ Makefile.in
 Makefile
 vlcintf.h
 vlcintf.xpt
+stamp-*
+*-stamp
