@@ -106,7 +106,7 @@ glibc run-time.])
 ])
 
 AC_PATH_XTRA
-PKG_CHECK_MODULES([LIBVLC], [libvlc >= 1.2.0])
+PKG_CHECK_MODULES([LIBVLC], [libvlc >= 1.1.0])
 
 
 AC_ARG_WITH(mozilla-sdk-path,

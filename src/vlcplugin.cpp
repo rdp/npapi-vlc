@@ -157,9 +157,11 @@ static void handle_changed_event(const libvlc_event_t* event, void *param)
     VlcPlugin *plugin = (VlcPlugin*)param;
     switch( event->type )
     {
+#ifdef LIBVLC120
         case libvlc_MediaPlayerBuffering:
             DOUBLE_TO_NPVARIANT(event->u.media_player_buffering.new_cache, npparam[0]);
             break;
+#endif
         case libvlc_MediaPlayerTimeChanged:
             DOUBLE_TO_NPVARIANT(event->u.media_player_time_changed.new_time, npparam[0]);
             break;
