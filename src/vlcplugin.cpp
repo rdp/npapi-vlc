@@ -942,14 +942,14 @@ void VlcPlugin::showToolbar()
 
     /* load icons */
     if( !p_btnPlay )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/play.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/play.xpm",
                             &p_btnPlay, NULL, NULL);
     if( p_btnPlay )
     {
         i_height = __MAX( i_height, p_btnPlay->height );
     }
     if( !p_btnPause )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/pause.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/pause.xpm",
                             &p_btnPause, NULL, NULL);
     if( p_btnPause )
     {
@@ -958,7 +958,7 @@ void VlcPlugin::showToolbar()
     i_width += __MAX( p_btnPause->width, p_btnPlay->width );
 
     if( !p_btnStop )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/stop.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/stop.xpm",
                             &p_btnStop, NULL, NULL );
     if( p_btnStop )
     {
@@ -966,7 +966,7 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_btnStop->width;
     }
     if( !p_timeline )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/time_line.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/time_line.xpm",
                             &p_timeline, NULL, NULL);
     if( p_timeline )
     {
@@ -974,7 +974,7 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_timeline->width;
     }
     if( !p_btnTime )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/time_icon.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/time_icon.xpm",
                             &p_btnTime, NULL, NULL);
     if( p_btnTime )
     {
@@ -982,7 +982,7 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_btnTime->width;
     }
     if( !p_btnFullscreen )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/fullscreen.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/fullscreen.xpm",
                             &p_btnFullscreen, NULL, NULL);
     if( p_btnFullscreen )
     {
@@ -990,14 +990,14 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_btnFullscreen->width;
     }
     if( !p_btnMute )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/volume_max.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/volume_max.xpm",
                             &p_btnMute, NULL, NULL);
     if( p_btnMute )
     {
         i_height = __MAX( i_height, p_btnMute->height );
     }
     if( !p_btnUnmute )
-        XpmReadFileToImage( p_display, DATA_PATH "/mozilla/volume_mute.xpm",
+        XpmReadFileToImage( p_display, DATA_PATH "/volume_mute.xpm",
                             &p_btnUnmute, NULL, NULL);
     if( p_btnUnmute )
     {
@@ -1009,7 +1009,7 @@ void VlcPlugin::showToolbar()
 
     if( !p_btnPlay || !p_btnPause || !p_btnStop || !p_timeline ||
         !p_btnTime || !p_btnFullscreen || !p_btnMute || !p_btnUnmute )
-        fprintf(stderr, "Error: some button images not found in %s\n", DATA_PATH );
+        fputs("Error: some button images not found in "DATA_PATH"\n", stderr);
 
     /* reset panels position and size */
     /* XXX  use i_width */
