@@ -2,11 +2,14 @@
 # Building the Mozilla plugin
 ###############################################################################
 
+EXTRA_DIST = npvlc_rc.rc.in npvlc.dll.manifest
 MOSTLYCLEANFILES = 
 CLEANFILES = $(BUILT_SOURCES)
-EXTRA_DIST = $(DIST_sources) npvlc_rc.rc.in COPYING npvlc.dll.manifest
+npvlcdir = $(libdir)/mozilla/plugins
 
-SOURCES_mozilla_common = \
+AM_CPPFLAGS = $(LIBVLC_CFLAGS)
+
+libvlcplugin_la_SOURCES = \
 	vlcshell.cpp \
 	vlcshell.h \
 	vlcplugin.cpp \
@@ -16,17 +19,40 @@ SOURCES_mozilla_common = \
 	control/nporuntime.cpp \
 	control/nporuntime.h \
 	control/position.h \
-	support/classinfo.h
-
-DIST_sources = $(SOURCES_mozilla_common) \
+	support/classinfo.h \
+	$(SOURCES_support)
+EXTRA_libvlcplugin_la_SOURCES = \
 	support/npwin.cpp support/npmac.cpp support/npunix.c
+libvlcplugin_la_DEPENDENCIES =
+libvlcplugin_la_LIBADD = $(LIBVLC_LIBS)
+libvlcplugin_la_LDFLAGS = \
+	-module -avoid-version \
+	-no-undefined
 
-if BUILD_MOZILLA
+npvlc_la_SOURCES = $(libvlcplugin_la_SOURCES)
+npvlc_la_DEPENDENCIES = $(libvlcplugin_la_DEPENDENCIES)
+npvlc_la_LIBADD = $(libvlcplugin_la_LIBADD)
+npvlc_la_LDFLAGS = $(libvlcplugin_la_LDFLAGS)
 
-LIBRARIES_libvlc = $(top_builddir)/src/libvlc.la \
-				   $(top_builddir)/src/libvlccore.la
+if !HAVE_DARWIN
+if !HAVE_WIN32
 
-if HAVE_WIN32
+#
+# UNIX/Others platforms
+#
+
+AM_CPPFLAGS += -DXP_UNIX $(X_CFLAGS) \
+	$(XPM_CFLAGS) \
+	-DDATA_PATH=\"$(pkgdatadir)\"
+libvlcplugin_la_LIBADD += $(X_LIBS) $(X_PRE_LIBS) \
+	$(XT_LIBS) -lX11 -lSM -lICE -lXpm \
+	$(XPM_LIBS) $(MOZILLA_LIBS)
+
+npvlc_LTLIBRARIES = libvlcplugin.la
+
+SOURCES_support = support/npunix.c
+
+else
 
 # Under Win32, Mozilla plugins need to be named NP******.DLL, but under Unix
 # the common naming scheme is lib******plugin.so. Also, we need npwin.cpp
@@ -34,27 +60,20 @@ if HAVE_WIN32
 #
 lib_LTLIBRARIES = npvlc.la
 
+AM_CPPFLAGS += -DXP_WIN -DXP_WIN32 \
+	-DXPCOM_GLUE -DHAVE_CPP_MODERN_SPECIALIZE_TEMPLATE_SYNTAX
 SOURCES_support = support/npwin.cpp
-CPPFLAGS_mozilla_EXTRA = -DXP_WIN -DXP_WIN32
-LDFLAGS_mozilla_EXTRA = -no-undefined -Wl,--kill-at -Wl,$(DATA_npvlc_rc)
+libvlcplugin_la_DEPENDENCIES += $(DATA_npvlc_rc)
+libvlcplugin_la_LDFLAGS += -Wl,--kill-at -Wl,$(DATA_npvlc_rc)
+libvlcplugin_la_LIBADD += -lgdi32
 
-npvlc_la_SOURCES = $(SOURCES_mozilla_common) $(SOURCES_support)
-npvlc_la_CFLAGS = `$(VLC_CONFIG) --cflags mozilla` $(CPPFLAGS_mozilla_extra)
-npvlc_la_CXXFLAGS = `$(VLC_CONFIG) --cxxflags mozilla` $(CPPFLAGS_mozilla_extra)
-npvlc_la_DEPENDENCIES = $(DATA_npvlc_rc) $(LIBRARIES_libvlc)
-npvlc_la_LDFLAGS = `$(VLC_CONFIG) --ldflags mozilla` -module -avoid-version \
-				   $(LDFLAGS_mozilla_EXTRA)
-npvlc_la_LIBADD = `$(VLC_CONFIG) -libs mozilla` $(LIBRARIES_libvlc)
-
-DATA_npvlc_rc = $(noinst_npvlc_rc_DATA)
-noinst_npvlc_rc_DATA = npvlc_rc.$(OBJEXT)
-noinst_npvlc_rcdir =
+noinst_DATA = npvlc_rc.$(OBJEXT)
 
 npvlc_rc.$(OBJEXT): npvlc_rc.rc
 	$(WINDRES) --include-dir $(srcdir) -i $< -o $@
 
+endif
 else
-if HAVE_DARWIN
 
 #
 # MacOS X
@@ -62,23 +81,19 @@ if HAVE_DARWIN
 
 lib_LTLIBRARIES = npvlc.la
 
-SOURCES_support = support/npmac.cpp
-CPPFLAGS_mozilla_EXTRA = -I. -I$(top_builddir) -I$(srcdir)/../include -c \
-	-F/System/Library/Frameworks/CoreFoundation.framework $(moz_CFLAGS) \
+AM_CPPFLAGS += -I. -I$(top_builddir) -c \
+	-F/System/Library/Frameworks/CoreFoundation.framework \
 	-I/Developer/Headers/FlatCarbon -fno-common -fpascal-strings \
-	-Wmost -Wno-four-char-constants -Wno-unknown-pragmas -DXP_MACOSX=1 \
+	-Wmost -Wno-four-char-constants -Wno-unknown-pragmas \
+	-DXP_UNIX -DXP_MACOSX=1 \
 	-DNO_X11=1 -DUSE_SYSTEM_CONSOLE=1 -pipe -fmessage-length=0 
-LDFLAGS_mozilla_EXTRA = -no-undefined -bundle -Wl,-read_only_relocs -Wl,suppress \
-	-Wl,-headerpad_max_install_names -shrext $(LIBEXT) -Wl,-framework,Carbon -Wl,-framework,System
 
-npvlc_la_SOURCES = $(SOURCES_mozilla_common) $(SOURCES_support)
-npvlc_la_CFLAGS = `$(VLC_CONFIG) --cflags mozilla` $(CPPFLAGS_mozilla_EXTRA)
-npvlc_la_CXXFLAGS = `$(VLC_CONFIG) --cxxflags mozilla` $(CPPFLAGS_mozilla_EXTRA) 
-npvlc_la_DEPENDENCIES = $(LIBRARIES_libvlc)
-npvlc_la_LDFLAGS = `$(VLC_CONFIG) --ldflags mozilla` -module -avoid-version \
-				   $(LDFLAGS_mozilla_EXTRA)
-npvlc_la_LIBADD = `$(VLC_CONFIG) -libs mozilla` $(LIBRARIES_libvlc)
-
+SOURCES_support = support/npmac.cpp
+libvlcplugin_la_LDFLAGS += \
+	-bundle -Wl,-read_only_relocs -Wl,suppress \
+	-Wl,-headerpad_max_install_names \
+	-Wl,-framework,Carbon -Wl,-framework,System \
+	-shrext $(LIBEXT)
 
 noinst_DATA = npvlc.rsrc VLC\ Plugin.plugin
 MOSTLYCLEANFILES += npvlc.rsrc
@@ -107,7 +122,7 @@ VLC\ Plugin.plugin: npvlc.rsrc $(lib_LTLIBRARIES)
 	rm -Rf "$@"
 	$(INSTALL) -d "VLC-Plugin.plugin/Contents/MacOS/lib"
 	$(INSTALL) -d "VLC-Plugin.plugin/Contents/Resources"
-	ACTION="release-makefile" PRODUCT="VLC-Plugin.plugin" src_dir=$(srcdir) build_dir=$(top_builddir) sh "$(top_srcdir)/projects/macosx/framework/Pre-Compile.sh"
+	ACTION="release-makefile" PRODUCT="VLC-Plugin.plugin" src_dir=$(srcdir) build_dir=$(top_builddir) sh "$(top_srcdir)/project/macosx/framework/Pre-Compile.sh"
 	$(INSTALL) npvlc.rsrc "VLC-Plugin.plugin/Contents/Resources/VLC Plugin.rsrc"
 	$(INSTALL) "$(top_builddir)/extras/package/macosx/plugin/Info.plist" "VLC-Plugin.plugin/Contents/Info.plist"
 	mv "VLC-Plugin.plugin" "VLC Plugin.plugin"
@@ -123,28 +138,4 @@ VLC\ Plugin.plugin: npvlc.rsrc $(lib_LTLIBRARIES)
 #	  done ; \
 #	fi
 
-else
-
-#
-# UNIX/Others platforms
-#
-
-CPPFLAGS_mozilla_EXTRA = -DDATA_PATH=\"$(pkgdatadir)\"
-
-npvlc_LTLIBRARIES = libvlcplugin.la
-
-npvlc = libvlcplugin$(LIBEXT)
-npvlcdir = $(libdir)/mozilla/plugins
-SOURCES_support = support/npunix.c
-
-libvlcplugin_la_SOURCES = $(SOURCES_mozilla_common) $(SOURCES_support)
-libvlcplugin_la_CFLAGS = `$(VLC_CONFIG) --cflags mozilla` $(CPPFLAGS_mozilla_EXTRA)
-libvlcplugin_la_CXXFLAGS = `$(VLC_CONFIG) --cxxflags mozilla` $(CPPFLAGS_mozilla_EXTRA)
-libvlcplugin_la_LDFLAGS = `$(VLC_CONFIG) --ldflags mozilla` -module -avoid-version -shrext $(LIBEXT)
-libvlcplugin_la_LIBADD = $(LIBRARIES_libvlc) `$(VLC_CONFIG) -libs mozilla`
-# automake gets confused by the ../..
-libvlcplugin_la_DEPENDENCIES = $(AM_LIBADD) 
 endif
-endif
-endif
-
