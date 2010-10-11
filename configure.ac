@@ -212,6 +212,8 @@ AM_COND_IF([HAVE_WIN32], [
 AM_COND_IF([HAVE_DARWIN], [
   AC_CONFIG_FILES([
     src/vlc.r
+    extras/macosx/Info.plist
+    extras/macosx/InstallerInfo.plist
   ])
 ])
 AC_OUTPUT
