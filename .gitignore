@@ -10,7 +10,6 @@ configure
 config.*
 INSTALL
 libtool
-m4
 Makefile
 Makefile.in
 stamp-*
