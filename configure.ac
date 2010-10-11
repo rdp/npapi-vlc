@@ -1,8 +1,8 @@
-dnl Autoconf settings for mozilla-plugin-vlc
+dnl Autoconf settings for npapi-vlc
 
 AC_COPYRIGHT([Copyright 2002-2010 the VideoLAN team])
 
-AC_INIT(mozilla-plugin-vlc, 1.2.0-git)
+AC_INIT(npapi-vlc, 1.2.0-git)
 VERSION_MAJOR="1"
 AC_SUBST(VERSION_MAJOR)
 VERSION_MINOR="2"
