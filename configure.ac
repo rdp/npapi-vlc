@@ -11,6 +11,13 @@ VERSION_REVISION="0"
 AC_SUBST(VERSION_REVISION)
 VERSION_EXTRA="-git"
 AC_SUBST(VERSION_EXTRA)
+dnl Win32 need s a numerical version_extra.
+case $( echo ${VERSION_EXTRA}|wc -m ) in
+       "1") VERSION_EXTRA_RC="0";;
+       "2") VERSION_EXTRA_RC=$( echo ${VERSION_EXTRA}|tr "abcdefghi" "123456789") ;;
+       *) if test ${VERSION_EXTRA} = "-git"; then VERSION_EXTRA_RC="666"; else VERSION_EXTRA_RC="99"; fi
+esac
+AC_SUBST(VERSION_EXTRA_RC)
 COPYRIGHT_YEARS="1996-2010"
 AC_SUBST(COPYRIGHT_YEARS)
 COPYRIGHT_MESSAGE="Copyright © ${COPYRIGHT_YEARS} the VideoLAN team"
