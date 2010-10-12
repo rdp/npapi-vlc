@@ -22,13 +22,13 @@
  *****************************************************************************/
 
 #include "config.h"
+#include "vlcplugin.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 #include "nporuntime.h"
-#include "vlcplugin.h"
 
 char* RuntimeNPObject::stringValue(const NPString &s)
 {

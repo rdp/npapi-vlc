@@ -89,6 +89,7 @@ case "${host_os}" in
     SYS=mingw32
     AC_CHECK_TOOL(WINDRES, windres, :)
     AC_DEFINE([_WIN32_WINNT], 0x0501, [Define to '0x0501' for Windows XP APIs.])
+    AC_DEFINE([_WIN32], 1, [Define to 1 if targetting Windows.])
     ;;
 esac
 AM_CONDITIONAL(HAVE_DARWIN, test "${SYS}" = "darwin")

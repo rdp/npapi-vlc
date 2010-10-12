@@ -29,6 +29,8 @@
 #ifndef __VLCPLUGIN_H__
 #define __VLCPLUGIN_H__
 
+#include "config.h"
+
 #include <vlc/vlc.h>
 
 // Setup XP_MACOSX, XP_UNIX, XP_WIN
