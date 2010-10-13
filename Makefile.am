@@ -6,7 +6,8 @@ AUTOMAKE_OPTIONS = \
 	dist-xz \
 	no-dist-gzip
 
-SUBDIRS = share src
+DIST_SUBDIRS= share src
+SUBDIRS = src
 EXTRA_DIST = \
 	extras/macosx/Info.plist.in \
 	extras/macosx/InstallerInfo.plist.in \
