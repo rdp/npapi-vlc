@@ -47,6 +47,19 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include "../share/fullscreen.xpm"
+#include "../share/pause.xpm"
+#include "../share/play.xpm"
+#include "../share/stop.xpm"
+#include "../share/time_icon.xpm"
+#include "../share/time_line.xpm"
+#include "../share/volume_max.xpm"
+#include "../share/volume_mute.xpm"
+//#include "../share/skip_next.xpm"
+//#include "../share/skip_previous.xpm"
+//#include "../share/volume_knob.xpm"
+//#include "../share/volume_slider_bar.xpm"
+
 /*****************************************************************************
  * utilitiy functions
  *****************************************************************************/
@@ -942,14 +955,14 @@ void VlcPlugin::showToolbar()
 
     /* load icons */
     if( !p_btnPlay )
-        XpmReadFileToImage( p_display, DATA_PATH "/play.xpm",
+        XpmCreateImageFromData( p_display, play_xpm,
                             &p_btnPlay, NULL, NULL);
     if( p_btnPlay )
     {
         i_height = __MAX( i_height, p_btnPlay->height );
     }
     if( !p_btnPause )
-        XpmReadFileToImage( p_display, DATA_PATH "/pause.xpm",
+        XpmCreateImageFromData( p_display, pause_xpm,
                             &p_btnPause, NULL, NULL);
     if( p_btnPause )
     {
@@ -958,7 +971,7 @@ void VlcPlugin::showToolbar()
     i_width += __MAX( p_btnPause->width, p_btnPlay->width );
 
     if( !p_btnStop )
-        XpmReadFileToImage( p_display, DATA_PATH "/stop.xpm",
+        XpmCreateImageFromData( p_display, stop_xpm,
                             &p_btnStop, NULL, NULL );
     if( p_btnStop )
     {
@@ -966,7 +979,7 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_btnStop->width;
     }
     if( !p_timeline )
-        XpmReadFileToImage( p_display, DATA_PATH "/time_line.xpm",
+        XpmCreateImageFromData( p_display, time_line2_xpm,
                             &p_timeline, NULL, NULL);
     if( p_timeline )
     {
@@ -974,7 +987,7 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_timeline->width;
     }
     if( !p_btnTime )
-        XpmReadFileToImage( p_display, DATA_PATH "/time_icon.xpm",
+        XpmCreateImageFromData( p_display, time_slider_knob_xpm,
                             &p_btnTime, NULL, NULL);
     if( p_btnTime )
     {
@@ -982,7 +995,7 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_btnTime->width;
     }
     if( !p_btnFullscreen )
-        XpmReadFileToImage( p_display, DATA_PATH "/fullscreen.xpm",
+        XpmCreateImageFromData( p_display, fullscreen_xpm,
                             &p_btnFullscreen, NULL, NULL);
     if( p_btnFullscreen )
     {
@@ -990,14 +1003,14 @@ void VlcPlugin::showToolbar()
         i_width += BTN_SPACE + p_btnFullscreen->width;
     }
     if( !p_btnMute )
-        XpmReadFileToImage( p_display, DATA_PATH "/volume_max.xpm",
+        XpmCreateImageFromData( p_display, volume_max_xpm,
                             &p_btnMute, NULL, NULL);
     if( p_btnMute )
     {
         i_height = __MAX( i_height, p_btnMute->height );
     }
     if( !p_btnUnmute )
-        XpmReadFileToImage( p_display, DATA_PATH "/volume_mute.xpm",
+        XpmCreateImageFromData( p_display, volume_mute_xpm,
                             &p_btnUnmute, NULL, NULL);
     if( p_btnUnmute )
     {
