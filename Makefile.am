@@ -9,6 +9,7 @@ AUTOMAKE_OPTIONS = \
 DIST_SUBDIRS= share src
 SUBDIRS = src
 EXTRA_DIST = \
+	autogen.sh \
 	extras/macosx/Info.plist.in \
 	extras/macosx/InstallerInfo.plist.in \
 	extras/macosx/InstallerDescription.plist \
