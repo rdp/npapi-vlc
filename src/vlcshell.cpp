@@ -68,7 +68,6 @@ static LRESULT CALLBACK Manage( HWND p_hwnd, UINT i_msg, WPARAM wpar, LPARAM lpa
  *****************************************************************************/
 char * NPP_GetMIMEDescription( void )
 {
-    static char mimetype[] = PLUGIN_MIMETYPES;
     return mimetype;
 }
 
