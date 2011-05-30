@@ -31,16 +31,20 @@ resource 'STR#' (127)
         "MPEG video",
         "MPEG video",
         /* MPEG-4 */
-        "MPEG-4 video",
         "MPEG-4 audio",
+        "MPEG-4 audio",
+        /* */
+        "MPEG-4 video",
+        "MPEG-4 video",
         "MPEG-4 video",
         "MPEG-4 video",
         /* AVI */
         "AVI video",
         /* Quicktime */
-/*        "QuickTime video", */
+        /* "QuickTime video", */
         /* OGG */
         "Ogg stream",
+        "Ogg video",
         "Ogg stream",
         /* VLC */
         "VLC plug-in",
@@ -49,6 +53,8 @@ resource 'STR#' (127)
         "Windows Media video",
         "Windows Media plug-in",
         "Windows Media video",
+        "Windows Media video",
+        "Windows Media audio",
         /* Google VLC */
         "Google VLC plug-in",
         /* WAV audio */
@@ -68,6 +74,19 @@ resource 'STR#' (127)
         /* MkV */
         "MKV video",
         "MKV audio",
+        /* XSPF */
+        "XSPF playlist",
+        /* M3U */
+        "M3U playlist",
+        /* Webm */
+        "Webm video",
+        "Webm audio",
+        /* Real Media */
+        "Real Media",
+        "Readl Audio",
+        /* AMR */
+        "AMR audio",
+ 
     };
 };
 
@@ -83,16 +102,20 @@ resource 'STR#' (128,"MIME Type")
         "video/mpeg-system", "mpg,mpeg,vob",
         "video/x-mpeg-system", "mpg,mpeg,vob",
         /* MPEG-4 */
-        "video/mp4", "mp4,mpg4",
         "audio/mp4", "mp4,mpg4",
+        "audio/x-m4a", "m4a"
+        /* MPEG-4 */
+        "video/mp4", "mp4,mpg4",
         "application/mpeg4-iod", "mp4,mpg4",
         "application/mpeg4-muxcodetable", "mp4,mpg4",
+        "video/x-m4v", "m4v",
         /* AVI */
         "video/x-msvideo", "avi",
         /* Quicktime */
-/*        "video/quicktime", "mov,qt", */
+        /* "video/quicktime", "mov,qt", */
         /* OGG */
         "application/ogg", "ogg",
+        "video/ogg", "ogv",
         "application/x-ogg", "ogg",
         /* VLC */
         "application/x-vlc-plugin", "vlc",
@@ -101,6 +124,8 @@ resource 'STR#' (128,"MIME Type")
         "video/x-ms-asf", "asf,asx",
         "application/x-mplayer2", "",
         "video/x-ms-wmv", "wmv",
+        "video/x-ms-wvx", "wvx",
+        "video/x-ms-wma", "wma",
         /* Google VLC */
         "video/x-google-vlc-plugin", "",
         /* WAV audio */
@@ -122,6 +147,16 @@ resource 'STR#' (128,"MIME Type")
         "audio/x-matroska", "mka",
         /* XSPF */
         "application/xspf+xml", "xspf",
+        /* M3U */
+        "audio/x-mpegurl", "m3u",
+        /* Webm */
+        "video/webm", "webm",
+        "audio/webm", "webm",
+        /* Real Media */
+        "application/vnd.rn-realmedia", "rm",
+        "audio/x-realaudio", "ra",
+        /* AMR */
+        "audio/amr", "amr",
 
     };
 };

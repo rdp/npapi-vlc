@@ -28,7 +28,7 @@ char * NPP_GetMIMEDescription( void );
 
 NPError NPP_Initialize( void );
 
-#ifdef OJI 
+#ifdef OJI
 jref NPP_GetJavaClass( void );
 #endif
 void NPP_Shutdown( void );
@@ -87,21 +87,22 @@ static char mimetype[] =
     "video/x-mpeg:mpg,mpeg,mpe:MPEG video;"
     "video/mpeg-system:mpg,mpeg,mpe,vob:MPEG video;"
     "video/x-mpeg-system:mpg,mpeg,mpe,vob:MPEG video;"
-    /* M3U */
-    "audio/x-mpegurl:m3u:MPEG audio;"
     /* MPEG-4 */
-    "video/mp4:mp4,mpg4:MPEG-4 video;"
-    "audio/mp4:mp4,mpg4:MPEG-4 audio;"
+    "audio/mp4:aac,mp4,mpg4:MPEG-4 audio;"
     "audio/x-m4a:m4a:MPEG-4 audio;"
+    /* MPEG-4 ASP */
+    "video/mp4:mp4,mpg4:MPEG-4 video;"
     "application/mpeg4-iod:mp4,mpg4:MPEG-4 video;"
     "application/mpeg4-muxcodetable:mp4,mpg4:MPEG-4 video;"
+    "video/x-m4v:m4v:MPEG-4 video;"
     /* AVI */
     "video/x-msvideo:avi:AVI video;"
     /* QuickTime */
-    "video/quicktime:mov,qt:QuickTime video;"
+    /* "video/quicktime:mov,qt:QuickTime video;" */
     /* OGG */
-    "application/x-ogg:ogg:Ogg stream;"
     "application/ogg:ogg:Ogg stream;"
+    "video/ogg:ogv:Ogg video;"
+    "application/x-ogg:ogg:Ogg stream;"
     /* VLC */
     "application/x-vlc-plugin:vlc:VLC plug-in;"
     /* Windows Media */
@@ -132,12 +133,17 @@ static char mimetype[] =
     "audio/x-matroska:mka:Matroska audio;"
     /* XSPF */
     "application/xspf+xml:xspf:Playlist xspf;"
+    /* M3U */
+    "audio/x-mpegurl:m3u:MPEG audio;"
     /* Webm */
     "video/webm:webm:WebM video;"
     "audio/webm:webm:WebM audio;"
     /* Real Media */
     "application/vnd.rn-realmedia:rm:Real Media File;"
-    "audio/x-realaudio:ra:Real Media Audio;";
+    "audio/x-realaudio:ra:Real Media Audio;"
+    /* AMR */
+    "audio/amr:amr:AMR audio;"
+    ;
 
 
 #endif
