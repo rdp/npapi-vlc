@@ -36,7 +36,7 @@
 #   include "npapi.h"
 #endif
 #if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-#include "npupp.h" 
+#include "npupp.h"
 #else
 #include "npfunctions.h"
 #endif
@@ -73,9 +73,9 @@ Private_GetJavaClass(void)
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\.
 ////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//.
-//						PLUGIN DLL entry points   
+//						PLUGIN DLL entry points
 //
-// These are the Windows specific DLL entry points. They must be exoprted
+// These are the Windows specific DLL entry points. They must be exported
 //
 
 // we need these to be global since we have to fill one of its field
@@ -99,12 +99,12 @@ NPError WINAPI NP_EXPORT
 #endif
 NP_GetEntryPoints(NPPluginFuncs* pFuncs)
 {
-    // trap a NULL ptr 
+    // trap a NULL ptr
     if(pFuncs == NULL)
         return NPERR_INVALID_FUNCTABLE_ERROR;
 
     // if the plugin's function table is smaller than the plugin expects,
-    // then they are incompatible, and should return an error 
+    // then they are incompatible, and should return an error
 
     pFuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
     pFuncs->newp          = NPP_New;
@@ -138,14 +138,14 @@ NPError WINAPI NP_EXPORT
 #endif
 NP_Initialize(NPNetscapeFuncs* pFuncs)
 {
-    // trap a NULL ptr 
+    // trap a NULL ptr
     if(pFuncs == NULL)
         return NPERR_INVALID_FUNCTABLE_ERROR;
 
-    g_pNavigatorFuncs = pFuncs; // save it for future reference 
+    g_pNavigatorFuncs = pFuncs; // save it for future reference
 
     // if the plugin's major ver level is lower than the Navigator's,
-    // then they are incompatible, and should return an error 
+    // then they are incompatible, and should return an error
     if(HIBYTE(pFuncs->version) > NP_VERSION_MAJOR)
         return NPERR_INCOMPATIBLE_VERSION_ERROR;
 
@@ -155,7 +155,7 @@ NP_Initialize(NPNetscapeFuncs* pFuncs)
     if( navMinorVers >= NPVERS_HAS_NOTIFICATION ) {
         g_pluginFuncs->urlnotify = NPP_URLNotify;
     }
-#ifdef OJI	
+#ifdef OJI
     if( navMinorVers >= NPVERS_HAS_LIVECONNECT ) {
         g_pluginFuncs->javaClass = Private_GetJavaClass();
     }
@@ -170,12 +170,12 @@ NP_Initialize(NPNetscapeFuncs* pFuncs)
 //
 //	called immediately before the plugin DLL is unloaded.
 //	This function should check for some ref count on the dll to see if it is
-//	unloadable or it needs to stay in memory. 
+//	unloadable or it needs to stay in memory.
 //
 #ifdef __MINGW32__
 extern "C" __declspec(dllexport) NPError WINAPI
 #else
-NPError WINAPI NP_EXPORT 
+NPError WINAPI NP_EXPORT
 #endif
 NP_Shutdown()
 {
@@ -189,7 +189,7 @@ char * NP_GetMIMEDescription()
   return NPP_GetMIMEDescription();
 }
 
-//						END - PLUGIN DLL entry points   
+//						END - PLUGIN DLL entry points
 ////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//.
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\.
 
@@ -476,7 +476,7 @@ NPError NPN_RequestRead(NPStream* stream, NPByteRange* rangeList)
 /* Creates a new stream of data from the plug-in to be interpreted
  * by Netscape in the current window.
  */
-NPError NPN_NewStream(NPP instance, NPMIMEType type, 
+NPError NPN_NewStream(NPP instance, NPMIMEType type,
                       const char* target, NPStream** stream)
 {
     int navMinorVersion = g_pNavigatorFuncs->version & 0xFF;
