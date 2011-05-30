@@ -104,7 +104,7 @@ static char mimetype[] =
     "video/ogg:ogv:Ogg video;"
     "application/x-ogg:ogg:Ogg stream;"
     /* VLC */
-    "application/x-vlc-plugin:vlc:VLC plug-in;"
+    "application/x-vlc-plugin::VLC plug-in;"
     /* Windows Media */
     "video/x-ms-asf-plugin:asf,asx:Windows Media Video;"
     "video/x-ms-asf:asf,asx:Windows Media Video;"

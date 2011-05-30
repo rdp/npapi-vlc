@@ -118,7 +118,7 @@ resource 'STR#' (128,"MIME Type")
         "video/ogg", "ogv",
         "application/x-ogg", "ogg",
         /* VLC */
-        "application/x-vlc-plugin", "vlc",
+        "application/x-vlc-plugin", "",
         /* Windows Media */
         "video/x-ms-asf-plugin", "asf,asx",
         "video/x-ms-asf", "asf,asx",
