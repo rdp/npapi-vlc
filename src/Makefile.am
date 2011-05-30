@@ -3,7 +3,7 @@
 ###############################################################################
 
 EXTRA_DIST = npvlc_rc.rc.in npvlc.dll.manifest test.html
-MOSTLYCLEANFILES = 
+MOSTLYCLEANFILES =
 CLEANFILES = $(BUILT_SOURCES)
 npvlcdir = $(libdir)/mozilla/plugins
 
@@ -21,8 +21,10 @@ libvlcplugin_la_SOURCES = \
 	control/position.h \
 	support/classinfo.h \
 	$(SOURCES_support)
+
 EXTRA_libvlcplugin_la_SOURCES = \
 	support/npwin.cpp support/npmac.cpp support/npunix.cpp
+
 libvlcplugin_la_DEPENDENCIES =
 libvlcplugin_la_LIBADD = $(LIBVLC_LIBS)
 libvlcplugin_la_LDFLAGS = \
@@ -37,10 +39,8 @@ npvlc_la_LDFLAGS = $(libvlcplugin_la_LDFLAGS)
 if !HAVE_DARWIN
 if !HAVE_WIN32
 
+# Unix (x11) platforms
 #
-# UNIX/Others platforms
-#
-
 AM_CPPFLAGS += -DXP_UNIX $(X_CFLAGS) \
 	$(XPM_CFLAGS) \
 	-DDATA_PATH=\"$(pkgdatadir)\"
@@ -52,11 +52,10 @@ npvlc_LTLIBRARIES = libvlcplugin.la
 
 SOURCES_support = support/npunix.cpp
 
-else
+else # Win32
 
-# Under Win32, Mozilla plugins need to be named NP******.DLL, but under Unix
-# the common naming scheme is lib******plugin.so. Also, we need npwin.cpp
-# under Win32 and npunix.cpp under Unix.
+# Under Win32|Mac, Mozilla plugins need to be named NP******.DLL, but under Unix
+# the common naming scheme is lib******plugin.so.
 #
 lib_LTLIBRARIES = npvlc.la
 
@@ -75,10 +74,9 @@ npvlc_rc.$(OBJEXT): npvlc_rc.rc
 endif
 else
 
-#
 # MacOS X
+# Mac OS plugins need .r files that will be processed into rsrc files
 #
-
 lib_LTLIBRARIES = npvlc.la
 
 AM_CPPFLAGS += -I. -I$(top_builddir) -c \
@@ -86,7 +84,7 @@ AM_CPPFLAGS += -I. -I$(top_builddir) -c \
 	-I/Developer/Headers/FlatCarbon -fno-common -fpascal-strings \
 	-Wmost -Wno-four-char-constants -Wno-unknown-pragmas \
 	-DXP_UNIX -DXP_MACOSX=1 \
-	-DNO_X11=1 -DUSE_SYSTEM_CONSOLE=1 -pipe -fmessage-length=0 
+	-DNO_X11=1 -DUSE_SYSTEM_CONSOLE=1 -pipe -fmessage-length=0
 
 SOURCES_support = support/npmac.cpp
 libvlcplugin_la_LDFLAGS += \
@@ -138,4 +136,4 @@ VLC\ Plugin.plugin: npvlc.rsrc $(lib_LTLIBRARIES)
 #	  done ; \
 #	fi
 
-endif
+endif # Mac
