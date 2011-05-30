@@ -62,10 +62,11 @@ lib_LTLIBRARIES = npvlc.la
 AM_CPPFLAGS += -DXP_WIN -DXP_WIN32 \
 	-DXPCOM_GLUE -DHAVE_CPP_MODERN_SPECIALIZE_TEMPLATE_SYNTAX
 SOURCES_support = support/npwin.cpp
-libvlcplugin_la_DEPENDENCIES += $(DATA_npvlc_rc)
-libvlcplugin_la_LDFLAGS += -Wl,--kill-at -Wl,$(DATA_npvlc_rc)
-libvlcplugin_la_LIBADD += -lgdi32
+npvlc_la_DEPENDENCIES += $(DATA_npvlc_rc)
+npvlc_la_LDFLAGS += -Wl,--kill-at -Wl,$(DATA_npvlc_rc)
+npvlc_la_LIBADD += -lgdi32
 
+DATA_npvlc_rc = $(noinst_DATA)
 noinst_DATA = npvlc_rc.$(OBJEXT)
 
 npvlc_rc.$(OBJEXT): npvlc_rc.rc
