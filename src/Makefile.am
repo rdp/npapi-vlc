@@ -22,7 +22,7 @@ libvlcplugin_la_SOURCES = \
 	support/classinfo.h \
 	$(SOURCES_support)
 EXTRA_libvlcplugin_la_SOURCES = \
-	support/npwin.cpp support/npmac.cpp support/npunix.c
+	support/npwin.cpp support/npmac.cpp support/npunix.cpp
 libvlcplugin_la_DEPENDENCIES =
 libvlcplugin_la_LIBADD = $(LIBVLC_LIBS)
 libvlcplugin_la_LDFLAGS = \
@@ -50,13 +50,13 @@ libvlcplugin_la_LIBADD += $(X_LIBS) $(X_PRE_LIBS) \
 
 npvlc_LTLIBRARIES = libvlcplugin.la
 
-SOURCES_support = support/npunix.c
+SOURCES_support = support/npunix.cpp
 
 else
 
 # Under Win32, Mozilla plugins need to be named NP******.DLL, but under Unix
 # the common naming scheme is lib******plugin.so. Also, we need npwin.cpp
-# under Win32 and npunix.c under Unix.
+# under Win32 and npunix.cpp under Unix.
 #
 lib_LTLIBRARIES = npvlc.la
 
