@@ -80,10 +80,10 @@ case "${host_os}" in
       ;;
     esac
 
-    CFLAGS_save="${CFLAGS_save} -D_INTL_REDIRECT_MACROS ${ARCH_flag}"; CFLAGS="${CFLAGS_save}"
-    CXXFLAGS_save="${CXXFLAGS_save} -D_INTL_REDIRECT_MACROS ${ARCH_flag}"; CXXFLAGS="${CXXFLAGS_save}"
-    CPPFLAGS_save="${CPPFLAGS_save} ${ARCH_flag}"; CPPFLAGS="${CPPFLAGS_save}"
-    LDFLAGS_save="${LDFLAGS_save} -Wl,-headerpad_max_install_names ${ARCH_flag}"; LDFLAGS="${LDFLAGS_save}"
+    CFLAGS="${CFLAGS} -D_INTL_REDIRECT_MACROS ${ARCH_flag}"
+    CXXFLAGS="${CXXFLAGS} -D_INTL_REDIRECT_MACROS ${ARCH_flag}"
+    CPPFLAGS="${CPPFLAGS} ${ARCH_flag}"
+    LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names ${ARCH_flag}"
     ;;
   *mingw32*)
     SYS=mingw32
@@ -160,7 +160,7 @@ AS_IF([test "${with_mozilla_sdk_path}" = "" -o "${with_mozilla_sdk_path}" = "no"
     fi
   fi
   AS_IF( [test $found = 1],[
-    CPPFLAGS="${CPPFLAGS_save} ${MOZILLA_CFLAGS}"
+    CPPFLAGS="${CPPFLAGS} ${MOZILLA_CFLAGS}"
     MOZILLA_REQUIRED_HEADERS=1
     AC_CHECK_HEADERS(npapi.h,,MOZILLA_REQUIRED_HEADERS=0)
     AC_CHECK_HEADERS(npruntime.h,,MOZILLA_REQUIRED_HEADERS=0,
@@ -193,7 +193,7 @@ AS_IF([test "${with_mozilla_sdk_path}" = "" -o "${with_mozilla_sdk_path}" = "no"
   ])
 
   real_mozilla_sdk="`cd ${with_mozilla_sdk_path} 2>/dev/null && pwd`"
-  CPPFLAGS="${CPPFLAGS_save} -I${real_mozilla_sdk}/include"
+  CPPFLAGS="${CPPFLAGS} -I${real_mozilla_sdk}/include"
   MOZILLA_REQUIRED_HEADERS=1
   AC_CHECK_HEADERS(npapi.h,,MOZILLA_REQUIRED_HEADERS=0)
   AC_CHECK_HEADERS(npruntime.h,,MOZILLA_REQUIRED_HEADERS=0,
