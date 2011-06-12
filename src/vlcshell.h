@@ -143,6 +143,8 @@ static char mimetype[] =
     "audio/x-realaudio:ra:Real Media Audio;"
     /* AMR */
     "audio/amr:amr:AMR audio;"
+    /* FLAC */
+    "audio/x-flac:flac:FLAC audio;"
     ;
 
 

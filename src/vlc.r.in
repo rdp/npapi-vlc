@@ -86,7 +86,8 @@ resource 'STR#' (127)
         "Readl Audio",
         /* AMR */
         "AMR audio",
- 
+        /* FLAC */
+        "FLAC audio",
     };
 };
 
@@ -157,7 +158,8 @@ resource 'STR#' (128,"MIME Type")
         "audio/x-realaudio", "ra",
         /* AMR */
         "audio/amr", "amr",
-
+        /* FLAC */
+        "audio/x-flac", "flac",
     };
 };
 
