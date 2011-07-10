@@ -1,4 +1,5 @@
 *.cache
+*.o
 *.lo
 *.log
 *.la

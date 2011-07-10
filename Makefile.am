@@ -6,8 +6,9 @@ AUTOMAKE_OPTIONS = \
 	dist-xz \
 	no-dist-gzip
 
-DIST_SUBDIRS= share src
-SUBDIRS = src
+DIST_SUBDIRS= share npapi
+SUBDIRS = npapi
+
 EXTRA_DIST = \
 	autogen.sh \
 	extras/macosx/Info.plist.in \

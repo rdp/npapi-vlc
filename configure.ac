@@ -23,7 +23,7 @@ AC_SUBST(COPYRIGHT_YEARS)
 COPYRIGHT_MESSAGE="Copyright © ${COPYRIGHT_YEARS} the VideoLAN team"
 AC_SUBST(COPYRIGHT_MESSAGE)
 
-AC_CONFIG_SRCDIR(src/vlcplugin.cpp)
+AC_CONFIG_SRCDIR(npapi/vlcplugin.cpp)
 AC_CONFIG_AUX_DIR(autotools)
 AC_CONFIG_MACRO_DIR(m4)
 AC_CANONICAL_BUILD
@@ -209,20 +209,20 @@ AC_LANG_POP(C++)
 
 AC_CONFIG_FILES([
   Makefile
-  src/Makefile
   share/Makefile
-  src/install.js
-  src/install.rdf
-  src/manifest.json
+  npapi/Makefile
+  npapi/install.js
+  npapi/install.rdf
+  npapi/manifest.json
 ])
 AM_COND_IF([HAVE_WIN32], [
   AC_CONFIG_FILES([
-    src/npvlc_rc.rc
+    npapi/npvlc_rc.rc
   ])
 ])
 AM_COND_IF([HAVE_DARWIN], [
   AC_CONFIG_FILES([
-    src/vlc.r
+    npapi/vlc.r
     extras/macosx/Info.plist
     extras/macosx/InstallerInfo.plist
   ])
