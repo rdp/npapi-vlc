@@ -47,6 +47,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#if defined(XP_UNIX)
 #include "../share/fullscreen.xpm"
 #include "../share/pause.xpm"
 #include "../share/play.xpm"
@@ -59,7 +60,7 @@
 //#include "../share/skip_previous.xpm"
 //#include "../share/volume_knob.xpm"
 //#include "../share/volume_slider_bar.xpm"
-
+#endif
 
 #ifdef XP_WIN
 #include "vlc_win32_fullscreen.h"
