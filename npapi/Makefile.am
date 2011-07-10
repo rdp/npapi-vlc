@@ -61,7 +61,10 @@ lib_LTLIBRARIES = npvlc.la
 
 AM_CPPFLAGS += -DXP_WIN -DXP_WIN32 \
 	-DXPCOM_GLUE -DHAVE_CPP_MODERN_SPECIALIZE_TEMPLATE_SYNTAX
-SOURCES_support = support/npwin.cpp
+SOURCES_support = support/npwin.cpp \
+	vlc_win32_fullscreen.cpp \
+	vlc_win32_fullscreen.h
+
 npvlc_la_DEPENDENCIES += $(DATA_npvlc_rc)
 npvlc_la_LDFLAGS += -Wl,--kill-at -Wl,$(DATA_npvlc_rc)
 npvlc_la_LIBADD += -lgdi32

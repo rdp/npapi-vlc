@@ -746,6 +746,20 @@ static LRESULT CALLBACK Manage( HWND p_hwnd, UINT i_msg, WPARAM wpar, LPARAM lpa
             EndPaint( p_hwnd, &paintstruct );
             return 0L;
         }
+        case WM_SIZE:{
+            int new_client_width = LOWORD(lpar);
+            int new_client_height = HIWORD(lpar);
+            //first child will be resized to client area
+            HWND hChildWnd = GetWindow(p_hwnd, GW_CHILD);
+            if(hChildWnd){
+                MoveWindow(hChildWnd, 0, 0, new_client_width, new_client_height, FALSE);
+            }
+            return 0L;
+        }
+        case WM_LBUTTONDBLCLK:{
+            p_plugin->toggle_fullscreen();
+            return 0L;
+        }
         default:
             /* delegate to default handler */
             return CallWindowProc( p_plugin->getWindowProc(), p_hwnd,
