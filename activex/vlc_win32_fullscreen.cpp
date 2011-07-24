@@ -804,7 +804,7 @@ void VLCFullScreenWnd::UnRegisterEvents()
 //VLCWindowsManager
 ///////////////////////
 VLCWindowsManager::VLCWindowsManager(HMODULE hModule)
-    :_hModule(hModule), _hWindowedParentWnd(0), _HolderWnd(0), _FSWnd(0), _p_md(0)
+    :_hModule(hModule), _hWindowedParentWnd(0), _HolderWnd(0), _FSWnd(0), _p_md(0), _b_new_messages_flag(false)
 {
     VLCHolderWnd::RegisterWndClassName(hModule);
     VLCFullScreenWnd::RegisterWndClassName(hModule);
