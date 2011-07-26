@@ -235,10 +235,7 @@ STDMETHODIMP VLCControl::fullscreen(void)
     HRESULT result = _p_instance->getMD(&p_md);
     if( SUCCEEDED(result) )
     {
-        if( libvlc_media_player_is_playing(p_md) )
-        {
-            libvlc_toggle_fullscreen(p_md);
-        }
+        _p_instance->toggleFullscreen();
     }
     return result;
 };
