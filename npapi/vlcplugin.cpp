@@ -48,18 +48,18 @@
 #include <stdlib.h>
 
 #if defined(XP_UNIX)
-#include "../share/fullscreen.xpm"
-#include "../share/pause.xpm"
-#include "../share/play.xpm"
-#include "../share/stop.xpm"
-#include "../share/time_icon.xpm"
-#include "../share/time_line.xpm"
-#include "../share/volume_max.xpm"
-#include "../share/volume_mute.xpm"
-//#include "../share/skip_next.xpm"
-//#include "../share/skip_previous.xpm"
-//#include "../share/volume_knob.xpm"
-//#include "../share/volume_slider_bar.xpm"
+#include "../share/pixmaps/x11/fullscreen.xpm"
+#include "../share/pixmaps/x11/pause.xpm"
+#include "../share/pixmaps/x11/play.xpm"
+#include "../share/pixmaps/x11/stop.xpm"
+#include "../share/pixmaps/x11/time_icon.xpm"
+#include "../share/pixmaps/x11/time_line.xpm"
+#include "../share/pixmaps/x11/volume_max.xpm"
+#include "../share/pixmaps/x11/volume_mute.xpm"
+//#include "../share/pixmaps/x11/skip_next.xpm"
+//#include "../share/pixmaps/x11/skip_previous.xpm"
+//#include "../share/pixmaps/x11/volume_knob.xpm"
+//#include "../share/pixmaps/x11/volume_slider_bar.xpm"
 #endif
 
 #ifdef XP_WIN

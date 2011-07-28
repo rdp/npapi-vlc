@@ -1,13 +1,18 @@
 dist_pkgdata_DATA = \
-	fullscreen.xpm \
-	pause.xpm \
-	play.xpm \
-	skip_next.xpm \
-	skip_previous.xpm \
-	stop.xpm \
-	time_icon.xpm \
-	time_line.xpm \
-	volume_knob.xpm \
-	volume_max.xpm \
-	volume_mute.xpm \
-	volume_slider_bar.xpm
+	pixmaps/x11/fullscreen.xpm \
+	pixmaps/x11/pause.xpm \
+	pixmaps/x11/play.xpm \
+	pixmaps/x11/skip_next.xpm \
+	pixmaps/x11/skip_previous.xpm \
+	pixmaps/x11/stop.xpm \
+	pixmaps/x11/time_icon.xpm \
+	pixmaps/x11/time_line.xpm \
+	pixmaps/x11/volume_knob.xpm \
+	pixmaps/x11/volume_max.xpm \
+	pixmaps/x11/volume_mute.xpm \
+	pixmaps/x11/volume_slider_bar.xpm \
+	pixmaps/win32/volume-muted.bmp \
+	pixmaps/win32/defullscreen.bmp \
+	pixmaps/win32/pause.bmp \
+	pixmaps/win32/play.bmp \
+	pixmaps/win32/volume.bmp
