@@ -16,3 +16,5 @@ dist_pkgdata_DATA = \
 	pixmaps/win32/pause.bmp \
 	pixmaps/win32/play.bmp \
 	pixmaps/win32/volume.bmp
+
+EXTRA_DIST = test/test.html
