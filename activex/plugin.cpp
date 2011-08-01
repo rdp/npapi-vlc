@@ -1214,6 +1214,16 @@ static void handle_pausable_changed_event(const libvlc_event_t* event, void *par
 
 bool VLCPlugin::playlist_select( int idx )
 {
+    //In some cases, libvlc may not have been initialized yet.
+    //So check it and initialize if needed (in getVLC())
+    libvlc_instance_t* p_libvlc;
+    HRESULT hr = getVLC(&p_libvlc);
+    if( FAILED(hr) || !p_libvlc)
+        return false;
+
+    if(!_p_mlist)
+        return false;//playlist does not exist, nothing to play...
+
     libvlc_media_t *p_m = NULL;
 
     assert(_p_mlist);
