@@ -831,10 +831,14 @@ void VLCWindowsManager::CreateWindows(HWND hWindowedParentWnd)
 
 void VLCWindowsManager::DestroyWindows()
 {
-    _FSWnd->DestroyWindow();
+    if(_FSWnd){
+        _FSWnd->DestroyWindow();
+    }
     _FSWnd = 0;
 
-    _HolderWnd->DestroyWindow();
+    if(_HolderWnd){
+        _HolderWnd->DestroyWindow();
+    }
     _HolderWnd = 0;
 }
 
@@ -852,6 +856,10 @@ void VLCWindowsManager::LibVlcDetach()
 void VLCWindowsManager::StartFullScreen()
 {
     if(getMD()&&!IsFullScreen()){
+        if(!_FSWnd){
+            _FSWnd= VLCFullScreenWnd::CreateFSWindow(this);
+        }
+
         SetParent(_HolderWnd->getHWND(), _FSWnd->getHWND());
         SetWindowPos(_FSWnd->getHWND(), HWND_TOPMOST, 0, 0,
                      GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 0/** SWP_NOZORDER**/);
@@ -872,7 +880,12 @@ void VLCWindowsManager::EndFullScreen()
 
         ShowWindow(_hWindowedParentWnd, SW_SHOW);
         ShowWindow(_FSWnd->getHWND(), SW_HIDE);
-    }
+
+        if(_FSWnd){
+            _FSWnd->DestroyWindow();
+        }
+        _FSWnd = 0;
+   }
 }
 
 void VLCWindowsManager::ToggleFullScreen()
