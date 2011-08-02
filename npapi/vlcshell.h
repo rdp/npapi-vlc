@@ -129,6 +129,7 @@ static char mimetype[] =
     "video/flv:flv:FLV video;"
     "video/x-flv:flv:FLV video;"
     /* Matroska */
+    "application/x-matroska:mkv:Matroska video;"
     "video/x-matroska:mkv:Matroska video;"
     "audio/x-matroska:mka:Matroska audio;"
     /* XSPF */

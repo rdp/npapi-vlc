@@ -72,8 +72,9 @@ resource 'STR#' (127)
         "FLV video",
         "FLV video",
         /* MkV */
-        "MKV video",
-        "MKV audio",
+        "Matroska video",
+        "Matroska video",
+        "Matroska audio",
         /* XSPF */
         "XSPF playlist",
         /* M3U */
@@ -144,6 +145,7 @@ resource 'STR#' (128,"MIME Type")
         "video/flv", "flv",
         "video/x-flv", "flv",
         /* MKV */
+        "application/x-matroska", "mkv",
         "video/x-matroska", "mkv",
         "audio/x-matroska", "mka",
         /* XSPF */
