@@ -229,11 +229,6 @@ VLCPlugin::VLCPlugin(VLCPluginClass *p_class, LPUNKNOWN pUnkOuter) :
     _b_usermode(TRUE),
     _WindowsManager(DllGetModule())
 {
-    /*
-    ** bump refcount to avoid recursive release from
-    ** following interfaces when releasing this interface
-    */
-    AddRef();
     p_class->AddRef();
 
     vlcOleControl = new VLCOleControl(this);
@@ -299,7 +294,6 @@ VLCPlugin::~VLCPlugin()
     if( _p_libvlc )  { libvlc_release(_p_libvlc); _p_libvlc=NULL; }
 
     _p_class->Release();
-    Release();
 };
 
 STDMETHODIMP VLCPlugin::QueryInterface(REFIID riid, void **ppv)
