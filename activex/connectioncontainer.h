@@ -77,7 +77,6 @@ private:
 };
 
 //////////////////////////////////////////////////////////////////////////
-
 class VLCDispatchEvent {
 
 public:
@@ -90,6 +89,7 @@ public:
     DISPPARAMS  _dispParams;
 };
 
+class EventSystemProxyWnd;
 class VLCConnectionPointContainer : public IConnectionPointContainer
 {
 
@@ -126,7 +126,7 @@ public:
 
 public:
     CRITICAL_SECTION csEvents;
-    HANDLE sEvents;
+    EventSystemProxyWnd* _ESProxyWnd;
 
     VLCPlugin *_p_instance;
     BOOL isRunning;
@@ -135,9 +135,6 @@ public:
     VLCConnectionPoint *_p_props;
     std::vector<LPCONNECTIONPOINT> _v_cps;
     std::queue<class VLCDispatchEvent *> _q_events;
-
-private:
-    HANDLE  hThread;
 };
 
 #endif

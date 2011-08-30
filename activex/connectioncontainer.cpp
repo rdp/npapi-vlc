@@ -102,80 +102,150 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// Condition variable emulation
+// EventSystemProxyWnd
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
-static void ConditionInit(HANDLE *handle)
+class EventSystemProxyWnd
 {
-    *handle = CreateEvent(NULL, TRUE, FALSE, NULL);
-    assert(*handle != NULL);
-}
+private:
+    enum{
+        WM_NEW_EVENT_NOTIFY = WM_USER+1
+    };
+    static LPCTSTR getClassName(void) { return TEXT("VLC ActiveX ESP Class"); };
+    static void RegisterWndClassName();
+    static void UnRegisterWndClassName();
+    static LRESULT CALLBACK ESPWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-static void ConditionDestroy(HANDLE *handle)
+    static HINSTANCE _hInstance;
+    static ATOM _ESP_wndclass_atom;
+    HWND _hWnd;
+
+public:
+    static EventSystemProxyWnd* CreateESPWindow(HINSTANCE hInstance, VLCConnectionPointContainer *pCPC);
+
+private:
+    EventSystemProxyWnd(HWND hWnd, VLCConnectionPointContainer *pCPC)
+        :_pCPC(pCPC), _HasUnprocessedNotify(false), _hWnd(hWnd){};
+    void ProcessNotify();
+
+public:
+    void DestroyWindow()
+        {::DestroyWindow(_hWnd);};
+
+    //allowed to invoke from any thread
+    void NewEventNotify();
+
+private:
+    VLCConnectionPointContainer *_pCPC;
+    volatile bool _HasUnprocessedNotify;
+};
+
+HINSTANCE EventSystemProxyWnd::_hInstance=0;
+ATOM EventSystemProxyWnd::_ESP_wndclass_atom=0;
+
+
+void EventSystemProxyWnd::RegisterWndClassName()
 {
-    CloseHandle(*handle);
-}
+    WNDCLASS wClass;
+    memset(&wClass, 0, sizeof(WNDCLASS));
 
-static void ConditionWait(HANDLE *handle, CRITICAL_SECTION *lock)
-{
-    DWORD dwWaitResult;
-
-    do {
-        LeaveCriticalSection(lock);
-        dwWaitResult = WaitForSingleObjectEx(*handle, INFINITE, TRUE);
-        EnterCriticalSection(lock);
-    } while(dwWaitResult == WAIT_IO_COMPLETION);
-
-    assert(dwWaitResult != WAIT_ABANDONED); /* another thread failed to cleanup! */
-    assert(dwWaitResult != WAIT_FAILED);
-    ResetEvent(*handle);
-}
-
-static void ConditionSignal(HANDLE *handle)
-{
-    SetEvent(*handle);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-// Event handling thread
-//
-// It bridges the gap between libvlc thread context and ActiveX/COM thread context.
-////////////////////////////////////////////////////////////////////////////////////////////////
-DWORD WINAPI ThreadProcEventHandler(LPVOID lpParam)
-{
-    CoInitialize(NULL);
-    VLCConnectionPointContainer *pCPC = (VLCConnectionPointContainer *)lpParam;
-
-    while(pCPC->isRunning)
+    if( ! GetClassInfo(_hInstance, getClassName(), &wClass) )
     {
-        EnterCriticalSection(&(pCPC->csEvents));
-        ConditionWait(&(pCPC->sEvents), &(pCPC->csEvents));
+        wClass.lpfnWndProc    = ESPWindowProc;
+        wClass.hInstance      = _hInstance;
+        wClass.lpszClassName  = getClassName();
 
-        if (!pCPC->isRunning)
-        {
-            LeaveCriticalSection(&(pCPC->csEvents));
+        _ESP_wndclass_atom = RegisterClass(&wClass);
+    }
+    else
+    {
+        _ESP_wndclass_atom = 0;
+    }
+}
+
+void EventSystemProxyWnd::UnRegisterWndClassName()
+{
+    if(0 != _ESP_wndclass_atom){
+        UnregisterClass(MAKEINTATOM(_ESP_wndclass_atom), _hInstance);
+        _ESP_wndclass_atom = 0;
+    }
+}
+
+LRESULT CALLBACK EventSystemProxyWnd::ESPWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    EventSystemProxyWnd* ESP = reinterpret_cast<EventSystemProxyWnd*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
+    switch( uMsg )
+    {
+        case WM_CREATE:{
+            CREATESTRUCT* CreateStruct = (CREATESTRUCT*)(lParam);
+            VLCConnectionPointContainer * pCPC = reinterpret_cast<VLCConnectionPointContainer *>(CreateStruct->lpCreateParams);
+
+            ESP = new EventSystemProxyWnd(hWnd, pCPC);
+            SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(ESP));
             break;
         }
-
-        while(!pCPC->_q_events.empty())
-        {
-            VLCDispatchEvent *ev = pCPC->_q_events.front();
-            pCPC->_q_events.pop();
-            pCPC->_p_events->fireEvent(ev->_dispId, &ev->_dispParams);
-            delete ev;
-
-
-            if (!pCPC->isRunning)
-            {
-                LeaveCriticalSection(&(pCPC->csEvents));
-                goto out;
-            }
-        }
-        LeaveCriticalSection(&(pCPC->csEvents));
+        case WM_NCDESTROY:
+            delete ESP;
+            SetWindowLongPtr(hWnd, GWLP_USERDATA, 0);
+            break;
+        case WM_NEW_EVENT_NOTIFY:
+            ESP->ProcessNotify();
+            break;
+        default:
+            return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
-out:
-    CoUninitialize();
     return 0;
+}
+
+EventSystemProxyWnd* EventSystemProxyWnd::CreateESPWindow(HINSTANCE hInstance, VLCConnectionPointContainer *pCPC)
+{
+    //save hInstance for future use
+    _hInstance = hInstance;
+
+    RegisterWndClassName();
+
+    HWND hWnd = CreateWindow(getClassName(),
+                             0,
+                             0,
+                             0, 0, 0, 0,
+                             0,
+                             0,
+                             _hInstance,
+                             pCPC
+                             );
+
+    if(hWnd)
+        return reinterpret_cast<EventSystemProxyWnd*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
+    return 0;
+}
+
+void EventSystemProxyWnd::NewEventNotify()
+{
+    if(!_HasUnprocessedNotify){
+        _HasUnprocessedNotify=true;
+        PostMessage(_hWnd, WM_NEW_EVENT_NOTIFY, 0, 0);
+    }
+}
+
+void EventSystemProxyWnd::ProcessNotify()
+{
+    while(_pCPC->isRunning){
+        VLCDispatchEvent *ev = 0;
+        EnterCriticalSection(&(_pCPC->csEvents));
+        if(!_pCPC->_q_events.empty()){
+            ev = _pCPC->_q_events.front();
+            _pCPC->_q_events.pop();
+        }
+        LeaveCriticalSection(&(_pCPC->csEvents));
+
+        if(ev){
+            _pCPC->_p_events->fireEvent(ev->_dispId, &ev->_dispParams);
+            delete ev;
+        }
+        else break;
+    }
+    _HasUnprocessedNotify=false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,9 +415,9 @@ VLCDispatchEvent::~VLCDispatchEvent()
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // VLCConnectionPointContainer
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
+extern HMODULE DllGetModule();
 VLCConnectionPointContainer::VLCConnectionPointContainer(VLCPlugin *p_instance) :
-    _p_instance(p_instance), freeze(FALSE), isRunning(TRUE)
+    _p_instance(p_instance), freeze(FALSE), isRunning(TRUE), _ESProxyWnd(0)
 {
     _p_events = new VLCConnectionPoint(dynamic_cast<LPCONNECTIONPOINTCONTAINER>(this),
             _p_instance->getDispEventID());
@@ -361,31 +431,24 @@ VLCConnectionPointContainer::VLCConnectionPointContainer(VLCPlugin *p_instance) 
 
     // init protection
     InitializeCriticalSection(&csEvents);
-    ConditionInit(&sEvents);
 
-    // create thread
-    hThread = CreateThread(NULL, NULL, ThreadProcEventHandler,
-                           dynamic_cast<LPVOID>(this), NULL, NULL);
+    _ESProxyWnd = EventSystemProxyWnd::CreateESPWindow(DllGetModule(), this);
 };
 
 VLCConnectionPointContainer::~VLCConnectionPointContainer()
 {
-    EnterCriticalSection(&csEvents);
     isRunning = FALSE;
     freeze = TRUE;
-    ConditionSignal(&sEvents);
-    LeaveCriticalSection(&csEvents);
 
-    do {
-        /* nothing wait for thread to finish */;
-    } while(WaitForSingleObjectEx (hThread, INFINITE, TRUE) == WAIT_IO_COMPLETION);
-    CloseHandle(hThread);
+    if(_ESProxyWnd)
+        _ESProxyWnd->DestroyWindow();
+    _ESProxyWnd=0;
 
-    ConditionDestroy(&sEvents);
     DeleteCriticalSection(&csEvents);
 
     _v_cps.clear();
     while(!_q_events.empty()) {
+        delete _q_events.front();
         _q_events.pop();
     };
 
@@ -435,18 +498,20 @@ void VLCConnectionPointContainer::freezeEvents(BOOL bFreeze)
 
 void VLCConnectionPointContainer::fireEvent(DISPID dispId, DISPPARAMS* pDispParams)
 {
-    EnterCriticalSection(&csEvents);
+    if(_ESProxyWnd){
+        EnterCriticalSection(&csEvents);
 
-    // queue event for later use when container is ready
-    _q_events.push(new VLCDispatchEvent(dispId, *pDispParams));
-    if( _q_events.size() > 1024 )
-    {
-        // too many events in queue, get rid of older one
-        delete _q_events.front();
-        _q_events.pop();
+        // queue event for later use when container is ready
+        _q_events.push(new VLCDispatchEvent(dispId, *pDispParams));
+        if( _q_events.size() > 1024 )
+        {
+            // too many events in queue, get rid of older one
+            delete _q_events.front();
+            _q_events.pop();
+        }
+        LeaveCriticalSection(&csEvents);
+        _ESProxyWnd->NewEventNotify();
     }
-    ConditionSignal(&sEvents);
-    LeaveCriticalSection(&csEvents);
 };
 
 void VLCConnectionPointContainer::firePropChangedEvent(DISPID dispId)
