@@ -1,0 +1,37 @@
+#define VERSION_NUMBER @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_REVISION@,@VERSION_EXTRA_RC@
+
+1 BITMAP "vlc16x16.bmp"
+1 VERSIONINFO
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+ PRODUCTVERSION VERSION_NUMBER
+ FILEVERSION VERSION_NUMBER
+
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "VideoLAN"
+      VALUE "ProductName", "VLC Web Plugin\0"
+      VALUE "ProductVersion", "@VERSION@"
+      VALUE "InternalName", "axvlc\0"
+      VALUE "OriginalFilename", "axvlc.dll\0"
+      VALUE "FileVersion", "@VERSION@"
+      VALUE "FileDescription", "VLC media player (Activex Plugin)\0"
+      VALUE "LegalCopyright", "Copyright \251 @COPYRIGHT_YEARS@ VideoLAN and VLC Authors"
+      VALUE "LegalTrademarks", "VLC media player, VideoLAN and x264 are registered trademarks from VideoLAN\0"
+      VALUE "OLESelfRegister", "\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END
+
+2 BITMAP DISCARDABLE "inplace.bmp"
+
+1 TYPELIB "axvlc.tlb"
+

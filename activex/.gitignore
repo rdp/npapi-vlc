@@ -1,0 +1,7 @@
+axvlc.inf
+axvlc_rc.rc
+*.lo
+*.o
+*.la
+.deps/
+.libs/
