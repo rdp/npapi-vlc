@@ -184,7 +184,7 @@ NP_Shutdown()
     return NPERR_NO_ERROR;
 }
 
-char * NP_GetMIMEDescription()
+const char * NP_GetMIMEDescription()
 {
   return NPP_GetMIMEDescription();
 }
