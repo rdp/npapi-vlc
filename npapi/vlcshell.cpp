@@ -328,7 +328,7 @@ NPError NPP_Destroy( NPP instance, NPSavedData** save )
     if( winproc )
     {
         /* reset WNDPROC */
-        SetWindowLong( win, GWL_WNDPROC, (LONG)winproc );
+        SetWindowLongPtr( win, GWLP_WNDPROC, (LONG_PTR)winproc );
     }
 #endif
 
@@ -429,15 +429,15 @@ NPError NPP_SetWindow( NPP instance, NPWindow* window )
             if( oldproc )
             {
                 /* reset WNDPROC */
-                SetWindowLong( oldwin, GWL_WNDPROC, (LONG)oldproc );
+                SetWindowLongPtr( oldwin, GWLP_WNDPROC, (LONG_PTR)oldproc );
             }
             /* attach our plugin object */
             SetWindowLongPtr((HWND)drawable, GWLP_USERDATA,
                              reinterpret_cast<LONG_PTR>(p_plugin));
 
             /* install our WNDPROC */
-            p_plugin->setWindowProc( (WNDPROC)SetWindowLong( drawable,
-                                             GWL_WNDPROC, (LONG)Manage ) );
+            p_plugin->setWindowProc( (WNDPROC)SetWindowLongPtr( drawable,
+                                             GWLP_WNDPROC, (LONG_PTR)Manage ) );
 
             /* change window style to our liking */
             LONG style = GetWindowLong((HWND)drawable, GWL_STYLE);
@@ -456,7 +456,7 @@ NPError NPP_SetWindow( NPP instance, NPWindow* window )
     {
         /* reset WNDPROC */
         HWND oldwin = (HWND)curwin.window;
-        SetWindowLong( oldwin, GWL_WNDPROC, (LONG)(p_plugin->getWindowProc()) );
+        SetWindowLongPtr( oldwin, GWLP_WNDPROC, (LONG_PTR)(p_plugin->getWindowProc()) );
         p_plugin->setWindowProc(NULL);
 
         curwin.window = NULL;
