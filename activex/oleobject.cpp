@@ -232,7 +232,7 @@ STDMETHODIMP VLCOleObject::EnumAdvise(IEnumSTATDATA **ppEnumAdvise)
     return _p_advise_holder->EnumAdvise(ppEnumAdvise);
 };
 
-STDMETHODIMP VLCOleObject::EnumVerbs(IEnumOleVerb **ppEnumOleVerb)
+STDMETHODIMP VLCOleObject::EnumVerbs(IEnumOLEVERB **ppEnumOleVerb)
 {
     return OleRegEnumVerbs(_p_instance->getClassID(),
         ppEnumOleVerb);
