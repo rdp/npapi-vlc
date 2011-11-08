@@ -66,7 +66,7 @@ static LRESULT CALLBACK Manage( HWND p_hwnd, UINT i_msg, WPARAM wpar, LPARAM lpa
 /******************************************************************************
  * UNIX-only API calls
  *****************************************************************************/
-char * NPP_GetMIMEDescription( void )
+const char * NPP_GetMIMEDescription( void )
 {
     return mimetype;
 }

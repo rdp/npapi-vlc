@@ -24,7 +24,7 @@
 #ifndef __VLCSHELL_H__
 #define __VLCSHELL_H__
 
-char * NPP_GetMIMEDescription( void );
+const char * NPP_GetMIMEDescription( void );
 
 NPError NPP_Initialize( void );
 

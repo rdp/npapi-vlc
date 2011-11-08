@@ -767,7 +767,7 @@ Private_GetJavaClass(void)
  *  - Netscape uses the return value to identify when an object instance
  *    of this plugin should be created.
  */
-char *
+const char *
 NP_GetMIMEDescription(void)
 {
     return NPP_GetMIMEDescription();
