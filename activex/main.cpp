@@ -32,14 +32,9 @@
 #include <tchar.h>
 
 #include <_mingw.h>
-
 #ifdef __MINGW64_VERSION_MAJOR
-
 #include <guiddef.h>
-#include <objsafe.h>
-
 #else /* ! __MINGW64_VERSION_MAJOR */
-
 /*
 ** Widl generated code requires guiddef.h,
 ** which is not available under MinGW32
@@ -47,15 +42,6 @@
 #undef GUID_EXT
 #define GUID_EXT
 #include <initguid.h>
-
-/*
-** Mingw32 do not declare those
-*/
-static DEFINE_GUID(CATID_SafeForInitializing, \
-	0x7DD95802, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
-static DEFINE_GUID(CATID_SafeForScripting, \
-	0x7DD95801, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
-
 #endif /* __MINGW64_VERSION_MAJOR */
 
 
@@ -71,6 +57,16 @@ using namespace std;
 #define PROGID_STR COMPANY_STR"."PROGRAM_STR
 
 #define GUID_STRLEN 39
+
+/*
+** MingW headers & libs do not declare those
+*/
+static DEFINE_GUID(_CATID_InternetAware, \
+	0x0DE86A58, 0x2BAA, 0x11CF, 0xA2, 0x29, 0x00,0xAA,0x00,0x3D,0x73,0x52);
+static DEFINE_GUID(_CATID_SafeForInitializing, \
+	0x7DD95802, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
+static DEFINE_GUID(_CATID_SafeForScripting, \
+	0x7DD95801, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
 
 static LONG i_class_ref= 0;
 static HINSTANCE h_instance= 0;
@@ -173,9 +169,9 @@ STDAPI DllUnregisterServer(VOID)
         CATID implCategories[] = {
             CATID_Control,
             CATID_PersistsToPropertyBag,
-            CATID_InternetAware,
-            CATID_SafeForInitializing,
-            CATID_SafeForScripting,
+            _CATID_InternetAware,
+            _CATID_SafeForInitializing,
+            _CATID_SafeForScripting,
         };
 
         pcr->UnRegisterClassImplCategories(CLSID_VLCPlugin,
@@ -334,9 +330,9 @@ STDAPI DllRegisterServer(VOID)
         CATID implCategories[] = {
             CATID_Control,
             CATID_PersistsToPropertyBag,
-            CATID_InternetAware,
-            CATID_SafeForInitializing,
-            CATID_SafeForScripting,
+            _CATID_InternetAware,
+            _CATID_SafeForInitializing,
+            _CATID_SafeForScripting,
         };
 
         pcr->RegisterClassImplCategories(CLSID_VLCPlugin,
