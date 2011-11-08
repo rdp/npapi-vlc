@@ -18,6 +18,11 @@ DIST_misc = \
     axvlc.tlb \
     inplace.bmp \
     vlc16x16.bmp \
+    ../share/pixmaps/win32/defullscreen.bmp \
+    ../share/pixmaps/win32/pixmaps/play.bmp \
+    ../share/pixmaps/win32/pixmaps/pause.bmp \
+    ../share/pixmaps/win32/pixmaps/volume.bmp \
+    ../share/pixmaps/win32/pixmaps/volume-muted.bmp \
     test.html \
     $(NULL)
 
@@ -66,6 +71,8 @@ axvlc_la_SOURCES = \
     plugin.h \
     axvlc_idl.c \
     axvlc_idl.h \
+    vlc_win32_fullscreen.cpp \
+    vlc_win32_fullscreen.h \
     $(NULL)
 
 axvlc_la_DEPENDENCIES = $(srcdir)/axvlc.def $(DATA_axvlc_rc)

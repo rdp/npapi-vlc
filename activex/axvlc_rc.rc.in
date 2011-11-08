@@ -32,6 +32,11 @@ BEGIN
 END
 
 2 BITMAP DISCARDABLE "inplace.bmp"
+3 BITMAP DISCARDABLE "../share/pixmaps/win32/defullscreen.bmp"
+4 BITMAP DISCARDABLE "../share/pixmaps/win32/play.bmp"
+5 BITMAP DISCARDABLE "../share/pixmaps/win32/pause.bmp"
+6 BITMAP DISCARDABLE "../share/pixmaps/win32/volume.bmp"
+7 BITMAP DISCARDABLE "../share/pixmaps/win32/volume-muted.bmp"
 
 1 TYPELIB "axvlc.tlb"
 
