@@ -29,7 +29,7 @@
 
 #include <vlc/vlc.h>
 
-#include "vlc_win32_fullscreen.h"
+#include "../common/win32_fullscreen.h"
 extern "C" const GUID CLSID_VLCPlugin;
 extern "C" const GUID CLSID_VLCPlugin2;
 extern "C" const GUID LIBID_AXVLC;
