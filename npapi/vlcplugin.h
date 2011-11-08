@@ -184,7 +184,7 @@ private:
 
 #ifdef XP_WIN
 HMODULE DllGetModule();
-#include "vlc_win32_fullscreen.h"
+#include "../common/win32_fullscreen.h"
 #endif
 
 class VlcPlugin

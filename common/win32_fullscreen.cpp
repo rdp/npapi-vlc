@@ -27,7 +27,7 @@
 
 #include <vlc/vlc.h>
 
-#include "vlc_win32_fullscreen.h"
+#include "win32_fullscreen.h"
 
 /////////////////////////////////
 //VLCHolderWnd static members

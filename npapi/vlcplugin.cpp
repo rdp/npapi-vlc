@@ -63,7 +63,7 @@
 #endif
 
 #ifdef XP_WIN
-#include "vlc_win32_fullscreen.h"
+#include "../common/win32_fullscreen.h"
 
 static HMODULE hDllModule= 0;
 

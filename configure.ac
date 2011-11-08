@@ -158,6 +158,8 @@ dnl pkg-config
 dnl As we want to do a loop due to the number of name possible for the .pc
 dnl we can't use the pkg-config macros.
 
+CPPFLAGS="${CPPFLAGS} -Icommon"
+
 AC_MSG_NOTICE([Checking for Mozilla])
 AS_IF([test "${with_mozilla_sdk_path}" = "" -o "${with_mozilla_sdk_path}" = "no"], [
   found=0
