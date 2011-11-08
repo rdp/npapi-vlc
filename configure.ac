@@ -100,6 +100,8 @@ case "${host_os}" in
 esac
 AM_CONDITIONAL(HAVE_DARWIN, test "${SYS}" = "darwin")
 AM_CONDITIONAL(HAVE_WIN32, test "${SYS}" = "mingw32")
+AC_ARG_ENABLE(activex, AS_HELP_STRING(--disable-activex, Do not build ActiveX plugin))
+AM_CONDITIONAL(BUILD_ACTIVEX, test "${SYS}" = "mingw32" -a "${enable_activex}" != "no")
 
 dnl
 dnl Buggy glibc prevention. Purposedly not cached.

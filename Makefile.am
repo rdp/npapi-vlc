@@ -8,7 +8,7 @@ AUTOMAKE_OPTIONS = \
 
 DIST_SUBDIRS= share npapi activex
 SUBDIRS = npapi
-if HAVE_WIN32
+if BUILD_ACTIVEX
 SUBDIRS += activex
 endif
 
