@@ -30,7 +30,20 @@
 #include <shlwapi.h>
 
 #include <tchar.h>
+
+#include <_mingw.h>
+#ifdef __MINGW64_VERSION_MAJOR
 #include <guiddef.h>
+#else /* ! __MINGW64_VERSION_MAJOR */
+/*
+** Widl generated code requires guiddef.h,
+** which is not available under MinGW32
+*/
+#undef GUID_EXT
+#define GUID_EXT
+#include <initguid.h>
+#endif /* __MINGW64_VERSION_MAJOR */
+
 
 using namespace std;
 

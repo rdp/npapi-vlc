@@ -66,7 +66,6 @@ axvlc_la_SOURCES = \
     plugin.h \
     axvlc_idl.c \
     axvlc_idl.h \
-    guiddef.h \
     $(NULL)
 
 axvlc_la_DEPENDENCIES = $(srcdir)/axvlc.def $(DATA_axvlc_rc)
