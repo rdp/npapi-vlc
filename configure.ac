@@ -1,6 +1,6 @@
 dnl Autoconf settings for npapi-vlc
 
-AC_COPYRIGHT([Copyright 2002-2010 the VideoLAN team])
+AC_COPYRIGHT([Copyright 2002-2011 the VideoLAN team])
 
 AC_INIT(npapi-vlc, 1.2.0-git)
 VERSION_MAJOR="1"
@@ -43,6 +43,12 @@ AC_PROG_CC_C99
 AC_USE_SYSTEM_EXTENSIONS
 AC_DEFINE([_FORTIFY_SOURCE], 2, [Define to '2' to get glibc warnings.])
 AC_PROG_CXX
+
+dnl override platform specific check for dependent libraries
+dnl otherwise libtool linking of shared libraries will
+dnl fail on anything other than pass_all.
+AC_CACHE_VAL(lt_cv_deplibs_check_method,
+    [lt_cv_deplibs_check_method=pass_all])
 
 AC_DISABLE_STATIC
 AC_LIBTOOL_DLOPEN
@@ -118,6 +124,24 @@ glibc run-time.])
 
 AC_PATH_XTRA
 PKG_CHECK_MODULES([LIBVLC], [libvlc >= 1.1.0])
+
+AS_IF([test "${SYS}" = "mingw32"],[
+    AC_CHECK_PROGS(MIDL, [midl], no)
+
+    dnl FIXME
+    dnl AC_CHECK_PROGS(WIDL, [widl], no)
+    dnl
+    WIDL="no"
+
+    AM_CONDITIONAL(HAS_MIDL_COMPILER, test "${MIDL}" != "no")
+    AM_CONDITIONAL(HAS_WIDL_COMPILER, test "${WIDL}" != "no")
+
+    AC_LANG_PUSH(C++)
+    AC_CHECK_HEADER(ole2.h,,[AC_MSG_ERROR([required OLE header ole2.h is missing from your system])])
+    AC_CHECK_HEADER(olectl.h,,[AC_MSG_ERROR([required OLE header olectl.h is missing from your system])])
+    AC_CHECK_HEADERS(objsafe.h,,,[#include <ole2.h>])
+    AC_LANG_POP(C++)
+])
 
 
 AC_ARG_WITH(mozilla-sdk-path,
@@ -207,6 +231,14 @@ AS_IF([test "${with_mozilla_sdk_path}" = "" -o "${with_mozilla_sdk_path}" = "no"
 ])
 AC_LANG_POP(C++)
 
+AM_COND_IF([HAVE_WIN32], [
+  ACTIVEX_CPPFLAGS="${CPPFLAGS} -DUNICODE -D_UNICODE -D_MIDL_USE_GUIDDEF_"
+  ACTIVEX_CXXFLAGS="${CXXFLAGS} -fno-exceptions"
+
+  AC_ARG_VAR([ACTIVEX_LIBS], [linker flags for Activex])
+  ACTIVEX_LIBS="${ACTIVEX_LIBS} -lole32 -loleaut32 -luuid -lshlwapi -lgdi32"
+])
+
 AC_CONFIG_FILES([
   Makefile
   share/Makefile
@@ -215,9 +247,13 @@ AC_CONFIG_FILES([
   npapi/install.rdf
   npapi/manifest.json
 ])
+
 AM_COND_IF([HAVE_WIN32], [
   AC_CONFIG_FILES([
     npapi/npvlc_rc.rc
+    activex/Makefile
+    activex/axvlc.inf
+    activex/axvlc_rc.rc
   ])
 ])
 AM_COND_IF([HAVE_DARWIN], [

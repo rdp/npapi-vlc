@@ -6,8 +6,11 @@ AUTOMAKE_OPTIONS = \
 	dist-xz \
 	no-dist-gzip
 
-DIST_SUBDIRS= share npapi
+DIST_SUBDIRS= share npapi activex
 SUBDIRS = npapi
+if HAVE_WIN32
+SUBDIRS += activex
+endif
 
 EXTRA_DIST = \
 	autogen.sh \
