@@ -85,10 +85,6 @@ static LRESULT CALLBACK VLCInPlaceClassWndProc(HWND hWnd, UINT uMsg, WPARAM wPar
             }
             return 0L;
         }
-        case WM_LBUTTONDBLCLK:{
-            p_instance->toggleFullscreen();
-            return 0L;
-        }
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }

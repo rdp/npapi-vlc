@@ -26,6 +26,7 @@
 
 #ifdef _WIN32
 
+class VLCWindowsManager;
 ///////////////////////
 //VLCHolderWnd
 ///////////////////////
@@ -34,33 +35,45 @@ class VLCHolderWnd
 public:
     static void RegisterWndClassName(HINSTANCE hInstance);
     static void UnRegisterWndClassName();
-    static VLCHolderWnd* CreateHolderWindow(HWND hParentWnd);
-    void DestroyWindow()
-        {::DestroyWindow(_hWnd);};
+    static VLCHolderWnd* CreateHolderWindow(HWND hParentWnd, VLCWindowsManager* WM);
+    void DestroyWindow();
+
+    libvlc_media_player_t* getMD() const {return _p_md;}
+
+    void LibVlcAttach(libvlc_media_player_t* p_md);
+    void LibVlcDetach();
 
 private:
     static LPCTSTR getClassName(void)  { return TEXT("VLC ActiveX Window Holder Class"); };
     static LRESULT CALLBACK VLCHolderClassWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
+    HHOOK _hMouseHook;
+
+    static void OnLibVlcEvent(const libvlc_event_t* event, void *param);
+    void DetachFromLibVlcEventSystem();
 
 private:
     static HINSTANCE _hinstance;
     static ATOM _holder_wndclass_atom;
 
 private:
-    VLCHolderWnd(HWND hWnd)
-        :_hWnd(hWnd){};
+    VLCHolderWnd(HWND hWnd, VLCWindowsManager* WM)
+        :_hWnd(hWnd), _WindowsManager(WM), _p_md(0),
+         _hMouseHook(NULL), _LibVlcESAttached(false){};
 
 public:
     HWND getHWND() const {return _hWnd;}
 
 private:
     HWND _hWnd;
+    VLCWindowsManager* _WindowsManager;
+    libvlc_media_player_t* _p_md;
+    bool _LibVlcESAttached;
 };
 
 ///////////////////////
 //VLCFullScreenWnd
 ///////////////////////
-class VLCWindowsManager;
 class VLCFullScreenWnd
 {
 public:
@@ -93,7 +106,7 @@ private:
     ~VLCFullScreenWnd();
 
 private:
-    libvlc_media_player_t* getMD();
+     libvlc_media_player_t* getMD() const;
 
     bool IsPlaying()
     {
@@ -186,7 +199,7 @@ public:
     HMODULE getHModule() const {return _hModule;};
     VLCHolderWnd* getHolderWnd() const {return _HolderWnd;}
     VLCFullScreenWnd* getFullScreenWnd() const {return _FSWnd;}
-    libvlc_media_player_t* getMD() {return _p_md;}
+    libvlc_media_player_t* getMD() const {return _HolderWnd?_HolderWnd->getMD():0;}
 
 public:
     void setNewMessageFlag(bool Yes)
@@ -197,8 +210,6 @@ public:
 private:
     HMODULE _hModule;
     HWND _hWindowedParentWnd;
-
-    libvlc_media_player_t* _p_md;
 
     VLCHolderWnd* _HolderWnd;
     VLCFullScreenWnd* _FSWnd;
