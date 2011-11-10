@@ -113,6 +113,7 @@ LRESULT CALLBACK VLCHolderWnd::VLCHolderClassWndProc(HWND hWnd, UINT uMsg, WPARA
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
+    return 0;
 };
 
 /////////////////////////////////
