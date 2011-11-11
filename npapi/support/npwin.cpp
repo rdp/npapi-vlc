@@ -26,8 +26,6 @@
  *
  */
 
-#include "config.h"
-
 //#define OJI 1
 
 #include "../vlcplugin.h"
