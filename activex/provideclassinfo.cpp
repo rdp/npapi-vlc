@@ -23,8 +23,6 @@
 #include "plugin.h"
 #include "provideclassinfo.h"
 
-using namespace std;
-
 STDMETHODIMP VLCProvideClassInfo::GetClassInfo(ITypeInfo **ppTI)
 {
     ITypeLib *p_typelib;

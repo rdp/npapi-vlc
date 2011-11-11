@@ -23,8 +23,6 @@
 #include "plugin.h"
 #include "olecontrol.h"
 
-using namespace std;
-
 STDMETHODIMP VLCOleControl::GetControlInfo(CONTROLINFO *pCI)
 {
     if( NULL == pCI )

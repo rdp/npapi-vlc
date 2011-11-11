@@ -23,8 +23,6 @@
 #include "plugin.h"
 #include "persiststorage.h"
 
-using namespace std;
-
 STDMETHODIMP VLCPersistStorage::GetClassID(LPCLSID pClsID)
 {
     if( NULL == pClsID )

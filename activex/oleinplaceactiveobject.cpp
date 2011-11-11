@@ -23,8 +23,6 @@
 #include "plugin.h"
 #include "oleinplaceactiveobject.h"
 
-using namespace std;
-
 STDMETHODIMP VLCOleInPlaceActiveObject::GetWindow(HWND *pHwnd)
 {
     if( NULL == pHwnd )

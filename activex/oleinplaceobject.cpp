@@ -25,8 +25,6 @@
 
 #include <docobj.h>
 
-using namespace std;
-
 STDMETHODIMP VLCOleInPlaceObject::GetWindow(HWND *pHwnd)
 {
     if( NULL == pHwnd )
