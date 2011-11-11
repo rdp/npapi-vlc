@@ -71,7 +71,7 @@ private:
     LPPICTURE   _inplace_picture;
 };
 
-class VLCPlugin : public IUnknown
+struct VLCPlugin : public IUnknown
 {
 
 public:
