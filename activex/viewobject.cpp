@@ -29,7 +29,7 @@ using namespace std;
 
 STDMETHODIMP VLCViewObject::Draw(DWORD dwAspect, LONG lindex, PVOID pvAspect,
         DVTARGETDEVICE *ptd, HDC hicTargetDev, HDC hdcDraw, LPCRECTL lprcBounds,
-        LPCRECTL lprcWBounds, BOOL(CALLBACK *pfnContinue)(DWORD), DWORD dwContinue)
+        LPCRECTL lprcWBounds, BOOL(CALLBACK *pfnContinue)(ULONG_PTR), ULONG_PTR dwContinue)
 {
     if( dwAspect & DVASPECT_CONTENT )
     {
