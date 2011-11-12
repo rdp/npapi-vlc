@@ -215,6 +215,7 @@ extern HMODULE DllGetModule();
 
 VLCPlugin::VLCPlugin(VLCPluginClass *p_class, LPUNKNOWN pUnkOuter) :
     _inplacewnd(NULL),
+    _WindowsManager(DllGetModule()),
     _p_class(p_class),
     _i_ref(1UL),
     _p_libvlc(NULL),
@@ -222,8 +223,7 @@ VLCPlugin::VLCPlugin(VLCPluginClass *p_class, LPUNKNOWN pUnkOuter) :
     _p_mplayer(NULL),
     _i_midx(-1),
     _i_codepage(CP_ACP),
-    _b_usermode(TRUE),
-    _WindowsManager(DllGetModule())
+    _b_usermode(TRUE)
 {
     p_class->AddRef();
 

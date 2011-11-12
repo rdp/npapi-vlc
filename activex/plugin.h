@@ -97,7 +97,7 @@ public:
         _bstr_mrl = SysAllocStringLen(mrl, SysStringLen(mrl));
         setDirty(TRUE);
     };
-    const BSTR getMRL(void) { return _bstr_mrl; };
+    BSTR getMRL(void) { return _bstr_mrl; };
 
     inline void setAutoPlay(BOOL autoplay)
     {
@@ -146,7 +146,7 @@ public:
         _bstr_baseurl = SysAllocStringLen(url, SysStringLen(url));
         setDirty(TRUE);
     };
-    const BSTR getBaseURL(void) { return _bstr_baseurl; };
+    BSTR getBaseURL(void) { return _bstr_baseurl; };
 
     // control size in HIMETRIC
     inline void setExtent(const SIZEL& extent)
