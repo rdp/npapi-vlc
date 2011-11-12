@@ -58,8 +58,9 @@ private:
 
 private:
     VLCHolderWnd(HWND hWnd, VLCWindowsManager* WM)
-        :_hWnd(hWnd), _WindowsManager(WM), _p_md(0),
-         _hMouseHook(NULL), _LibVlcESAttached(false){};
+        : _hMouseHook(NULL), _hWnd(hWnd)
+         , _WindowsManager(WM), _p_md(0)
+         , _LibVlcESAttached(false){};
 
 public:
     HWND getHWND() const {return _hWnd;}
