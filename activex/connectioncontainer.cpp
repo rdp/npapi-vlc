@@ -124,7 +124,7 @@ public:
 
 private:
     EventSystemProxyWnd(HWND hWnd, VLCConnectionPointContainer *pCPC)
-        :_pCPC(pCPC), _HasUnprocessedNotify(false), _hWnd(hWnd){};
+        : _hWnd(hWnd), _pCPC(pCPC), _HasUnprocessedNotify(false){};
     void ProcessNotify();
 
 public:
@@ -417,7 +417,7 @@ VLCDispatchEvent::~VLCDispatchEvent()
 ////////////////////////////////////////////////////////////////////////////////////////////////
 extern HMODULE DllGetModule();
 VLCConnectionPointContainer::VLCConnectionPointContainer(VLCPlugin *p_instance) :
-    _p_instance(p_instance), freeze(FALSE), isRunning(TRUE), _ESProxyWnd(0)
+    _ESProxyWnd(0), _p_instance(p_instance), isRunning(TRUE), freeze(FALSE)
 {
     _p_events = new VLCConnectionPoint(dynamic_cast<LPCONNECTIONPOINTCONTAINER>(this),
             _p_instance->getDispEventID());
