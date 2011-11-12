@@ -93,7 +93,7 @@ public:
         *pctInfo = SUCCEEDED(loadTypeInfo()) ? 1 : 0;
         return NOERROR;
     }
-    STDMETHODIMP GetTypeInfo(UINT iTInfo, LCID lcid, LPTYPEINFO* ppTInfo)
+    STDMETHODIMP GetTypeInfo(UINT , LCID , LPTYPEINFO* ppTInfo)
     {
         if( NULL == ppTInfo )
             return E_INVALIDARG;
@@ -107,15 +107,15 @@ public:
         return E_NOTIMPL;
     }
 
-    STDMETHODIMP GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames,
-            UINT cNames, LCID lcid, DISPID* rgDispID)
+    STDMETHODIMP GetIDsOfNames(REFIID , LPOLESTR* rgszNames,
+            UINT cNames, LCID , DISPID* rgDispID)
     {
         return FAILED(loadTypeInfo()) ? E_NOTIMPL :
             DispGetIDsOfNames(TypeInfo(), rgszNames, cNames, rgDispID);
     }
 
-    STDMETHODIMP Invoke(DISPID dispIdMember, REFIID riid,
-        LCID lcid, WORD wFlags, DISPPARAMS* pDispParams,
+    STDMETHODIMP Invoke(DISPID dispIdMember, REFIID ,
+        LCID , WORD wFlags, DISPPARAMS* pDispParams,
         VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr)
     {
         return FAILED(loadTypeInfo()) ? E_NOTIMPL :
