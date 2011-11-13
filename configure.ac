@@ -155,6 +155,7 @@ AC_ARG_VAR([MOZILLA_LIBS], [linker flags for Mozilla, overriding pkg-config])
 AC_LANG_PUSH(C++)
 AC_MSG_CHECKING([Mozilla headers])
 
+found=0
 if test -z "$MOZILLA_CFLAGS" -a -z "$MOZILLA_LIBS" -a -n "$PKG_CONFIG"
 then
 dnl pkg-config
@@ -169,12 +170,13 @@ dnl we can't use the pkg-config macros.
         MOZILLA_CFLAGS=$(eval $PKG_CONFIG --cflags "$i" )
         MOZILLA_LIBS=$(eval $PKG_CONFIG --libs "$i" )
         AC_MSG_RESULT([yes (${i})])
+        found=1
         break
       fi
-      AC_MSG_RESULT([no])
     fi
   done
 fi
+test "$found" = 0 && AC_MSG_RESULT([no])
 
 CPPFLAGS="${CPPFLAGS} ${MOZILLA_CFLAGS}"
 
