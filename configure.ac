@@ -127,16 +127,14 @@ glibc run-time.])
 AC_PATH_XTRA
 PKG_CHECK_MODULES([LIBVLC], [libvlc >= 1.1.0])
 
+WIDL="no"
+MIDL="no"
 AS_IF([test "${SYS}" = "mingw32"],[
     AC_CHECK_PROGS(MIDL, [midl], no)
 
     dnl FIXME
     dnl AC_CHECK_PROGS(WIDL, [widl], no)
     dnl
-    WIDL="no"
-
-    AM_CONDITIONAL(HAS_MIDL_COMPILER, test "${MIDL}" != "no")
-    AM_CONDITIONAL(HAS_WIDL_COMPILER, test "${WIDL}" != "no")
 
     AC_LANG_PUSH(C++)
     AC_CHECK_HEADER(ole2.h,,[AC_MSG_ERROR([required OLE header ole2.h is missing from your system])])
@@ -144,6 +142,9 @@ AS_IF([test "${SYS}" = "mingw32"],[
     AC_CHECK_HEADERS(objsafe.h,,,[#include <ole2.h>])
     AC_LANG_POP(C++)
 ])
+
+AM_CONDITIONAL(HAS_MIDL_COMPILER, test "${MIDL}" != "no")
+AM_CONDITIONAL(HAS_WIDL_COMPILER, test "${WIDL}" != "no")
 
 AC_ARG_WITH(mozilla-pkg,
   [  --with-mozilla-pkg=PKG  look for PKG.pc to build the mozilla plugin.])
