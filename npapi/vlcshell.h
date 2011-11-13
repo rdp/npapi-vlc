@@ -24,7 +24,11 @@
 #ifndef __VLCSHELL_H__
 #define __VLCSHELL_H__
 
-const char * NPP_GetMIMEDescription( void );
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+NPP_GET_MIME_CONST char * NPP_GetMIMEDescription( void );
 
 NPError NPP_Initialize( void );
 
