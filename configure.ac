@@ -109,13 +109,13 @@ dnl See sourceware.org bugs 5058 and 5443.
 dnl Ubuntu alone has 20 bug numbers for this...
 dnl
 AC_MSG_CHECKING(for buggy GNU/libc versions)
-AC_PREPROC_IFELSE([
+AC_PREPROC_IFELSE([AC_LANG_SOURCE([
 #include <limits.h>
 #if defined (__GLIBC__) && (__GLIBC__ == 2) \
   && (__GLIBC_MINOR__ >= 5) && (__GLIBC_MINOR__ <= 7)
 # error GNU/libc with dcgettext killer bug!
 #endif
-], [
+])], [
   AC_MSG_RESULT([not present])
 ], [
   AC_MSG_RESULT([found])
@@ -153,7 +153,7 @@ AC_ARG_VAR([MOZILLA_LIBS], [linker flags for Mozilla, overriding pkg-config])
 
 
 AC_LANG_PUSH(C++)
-AC_MSG_NOTICE([Checking for Mozilla])
+AC_MSG_CHECKING([Mozilla headers])
 
 if test -z "$MOZILLA_CFLAGS" -a -z "$MOZILLA_LIBS" -a -n "$PKG_CONFIG"
 then
@@ -163,14 +163,12 @@ dnl we can't use the pkg-config macros.
   for i in "${with_mozilla_pkg}" libxul {seamonkey,iceape,xulrunner,firefox,iceweasel,mozilla}-plugin; do
     if test -n "$i"; then
       echo "Trying to find $i package" >&AS_MESSAGE_LOG_FD
-      AC_MSG_CHECKING([for $i >= 1.9.2])
       if $PKG_CONFIG --exists --print-errors "$i >= 1.9.2" 2>&AS_MESSAGE_LOG_FD
       then
         echo "Using $i pkg-config package." >&AS_MESSAGE_LOG_FD
-        echo "Using $i package." >&AS_MESSAGE_FD
         MOZILLA_CFLAGS=$(eval $PKG_CONFIG --cflags "$i" )
         MOZILLA_LIBS=$(eval $PKG_CONFIG --libs "$i" )
-        AC_MSG_RESULT([yes])
+        AC_MSG_RESULT([yes (${i})])
         break
       fi
       AC_MSG_RESULT([no])
