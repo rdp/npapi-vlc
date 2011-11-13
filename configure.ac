@@ -145,95 +145,59 @@ AS_IF([test "${SYS}" = "mingw32"],[
     AC_LANG_POP(C++)
 ])
 
-
-AC_ARG_WITH(mozilla-sdk-path,
-  [  --with-mozilla-sdk-path=PATH path to mozilla sdk])
 AC_ARG_WITH(mozilla-pkg,
   [  --with-mozilla-pkg=PKG  look for PKG.pc to build the mozilla plugin.])
 AC_ARG_VAR([MOZILLA_CFLAGS], [C compiler flags for Mozilla, overriding pkg-config])
 AC_ARG_VAR([MOZILLA_LIBS], [linker flags for Mozilla, overriding pkg-config])
 
+
 AC_LANG_PUSH(C++)
+AC_MSG_NOTICE([Checking for Mozilla])
+
+if test -z "$MOZILLA_CFLAGS" -a -z "$MOZILLA_LIBS" -a -n "$PKG_CONFIG"
+then
 dnl pkg-config
 dnl As we want to do a loop due to the number of name possible for the .pc
 dnl we can't use the pkg-config macros.
-
-CPPFLAGS="${CPPFLAGS} -Icommon"
-
-AC_MSG_NOTICE([Checking for Mozilla])
-AS_IF([test "${with_mozilla_sdk_path}" = "" -o "${with_mozilla_sdk_path}" = "no"], [
-  found=0
-  if test -n "$MOZILLA_CFLAGS" -o -n "$MOZILLA_LIBS"
-  then
-    found=1
-  else
-    if test -n "$PKG_CONFIG"; then
-      for i in "${with_mozilla_pkg}" libxul {seamonkey,iceape,xulrunner,firefox,iceweasel,mozilla}-plugin; do
-        if test -n "$i"; then
-          echo "Trying to find $i package" >&AS_MESSAGE_LOG_FD
-          AC_MSG_CHECKING([for $i >= 1.9.2])
-          if $PKG_CONFIG --exists --print-errors "$i >= 1.9.2" 2>&AS_MESSAGE_LOG_FD
-          then
-            echo "Using $i pkg-config package." >&AS_MESSAGE_LOG_FD
-             echo "Using $i package." >&AS_MESSAGE_FD
-            found=1
-            MOZILLA_CFLAGS=$(eval $PKG_CONFIG --cflags "$i" )
-            MOZILLA_LIBS=$(eval $PKG_CONFIG --libs "$i" )
-            AC_MSG_RESULT([yes])
-            break
-          fi
-          AC_MSG_RESULT([no])
-        fi
-      done
+  for i in "${with_mozilla_pkg}" libxul {seamonkey,iceape,xulrunner,firefox,iceweasel,mozilla}-plugin; do
+    if test -n "$i"; then
+      echo "Trying to find $i package" >&AS_MESSAGE_LOG_FD
+      AC_MSG_CHECKING([for $i >= 1.9.2])
+      if $PKG_CONFIG --exists --print-errors "$i >= 1.9.2" 2>&AS_MESSAGE_LOG_FD
+      then
+        echo "Using $i pkg-config package." >&AS_MESSAGE_LOG_FD
+        echo "Using $i package." >&AS_MESSAGE_FD
+        MOZILLA_CFLAGS=$(eval $PKG_CONFIG --cflags "$i" )
+        MOZILLA_LIBS=$(eval $PKG_CONFIG --libs "$i" )
+        AC_MSG_RESULT([yes])
+        break
+      fi
+      AC_MSG_RESULT([no])
     fi
-  fi
-  AS_IF( [test $found = 1],[
-    CPPFLAGS="${CPPFLAGS} ${MOZILLA_CFLAGS}"
-    MOZILLA_REQUIRED_HEADERS=1
-    AC_CHECK_HEADERS(npapi.h,,MOZILLA_REQUIRED_HEADERS=0)
-    AC_CHECK_HEADERS(npruntime.h,,MOZILLA_REQUIRED_HEADERS=0,
-      [#if HAVE_NPAPI_H
-       # include <npapi.h>
-       #endif
-      ])
-    if test "${MOZILLA_REQUIRED_HEADERS}" = "0"; then
-      AC_MSG_ERROR([Please install the Firefox development tools; plugin/npapi.h and/or plugin/npruntime.h were not found.])
-    fi
-    MOZILLA_REQUIRED_HEADERS=
-    mozilla=:
-    AS_IF([ test "${SYS}" != "mingw32" -a "${SYS}" != "darwin"],[
-      PKG_CHECK_MODULES(XPM, [xpm xt],, [
-        AC_MSG_ERROR([Please install the libXpm and libXt development files.])
-      ])
+  done
+fi
+
+CPPFLAGS="${CPPFLAGS} ${MOZILLA_CFLAGS}"
+
+AC_CHECK_HEADERS(npapi.h)
+AC_CHECK_HEADERS(npruntime.h, [
+  dnl if found
+  AS_IF([ test "${SYS}" != "mingw32" -a "${SYS}" != "darwin"],[
+    PKG_CHECK_MODULES(XPM, [xpm xt],, [
+      AC_MSG_ERROR([Please install the libXpm and libXt development files.])
     ])
+  ])],[
+  dnl if not found
+  AC_MSG_ERROR([Please install the Mozilla development tools, required headers were not found.])
   ], [
-    AC_MSG_ERROR([Please install the Mozilla development tools (version 1.9.2 or higher).])
-  ])
-  dnl End of moz_sdk = ""
-], [
-  dnl special case for mingw32
-  AS_IF([test "${SYS}" = "mingw32"], [
-    AC_CHECK_TOOL(CYGPATH, cygpath, "")
-    dnl latest gecko sdk does not have an xpcom directory
-    AS_IF([test -d "${with_mozilla_sdk_path}/xpcom"], [
-      mozilla_sdk_xpcom="/xpcom"
-    ])
-  ])
+  #if HAVE_NPAPI_H
+   #include <npapi.h>
+  #endif
+  ]
+)
 
-  real_mozilla_sdk="`cd ${with_mozilla_sdk_path} 2>/dev/null && pwd`"
-  CPPFLAGS="${CPPFLAGS} -I${real_mozilla_sdk}/include"
-  MOZILLA_REQUIRED_HEADERS=1
-  AC_CHECK_HEADERS(npapi.h,,MOZILLA_REQUIRED_HEADERS=0)
-  AC_CHECK_HEADERS(npruntime.h,,MOZILLA_REQUIRED_HEADERS=0,
-      [#if HAVE_NPAPI_H
-        #include <npapi.h>
-        #endif
-      ])
-  AS_IF([test "${MOZILLA_REQUIRED_HEADERS}" = "0"], [
-    AC_MSG_ERROR([Please install the Mozilla development tools, required headers were not found.])
-  ])
-])
 AC_LANG_POP(C++)
+
 
 AM_COND_IF([HAVE_WIN32], [
   ACTIVEX_CPPFLAGS="${CPPFLAGS} -DUNICODE -D_UNICODE -D_MIDL_USE_GUIDDEF_"
