@@ -36,8 +36,8 @@ ATOM VLCHolderWnd::_holder_wndclass_atom = 0;
 
 enum{
     WM_TRY_SET_MOUSE_HOOK = WM_USER+1,
-    WM_LBUTTONDBLCLK_NOTIFY = WM_APP+1,
-    WM_LBUTTONDBLCLK_NOTIFY_SUCCESS = 0xFF
+    WM_MOUSE_EVENT_NOTIFY = WM_APP+1,
+    WM_MOUSE_EVENT_NOTIFY_SUCCESS = 0xFF
 };
 
 void VLCHolderWnd::RegisterWndClassName(HINSTANCE hInstance)
@@ -130,10 +130,9 @@ LRESULT CALLBACK VLCHolderWnd::VLCHolderClassWndProc(HWND hWnd, UINT uMsg, WPARA
             }
             break;
         }
-        case WM_LBUTTONDBLCLK_NOTIFY:{
-            h_data->_WindowsManager->ToggleFullScreen();
-            return WM_LBUTTONDBLCLK_NOTIFY_SUCCESS;
-            break;
+        case WM_MOUSE_EVENT_NOTIFY:{
+            h_data->_WindowsManager->OnMouseEvent(wParam);
+            return WM_MOUSE_EVENT_NOTIFY_SUCCESS;
         }
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -151,18 +150,24 @@ void VLCHolderWnd::DestroyWindow()
 LRESULT CALLBACK VLCHolderWnd::MouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     bool AllowReceiveMessage = true;
-    if(nCode >= 0 && WM_LBUTTONDBLCLK == wParam){
-        MOUSEHOOKSTRUCT* mhs = reinterpret_cast<MOUSEHOOKSTRUCT*>(lParam);
+    if(nCode >= 0){
+        switch(wParam){
+            case WM_MOUSEMOVE:
+            case WM_LBUTTONDBLCLK:{
+                MOUSEHOOKSTRUCT* mhs = reinterpret_cast<MOUSEHOOKSTRUCT*>(lParam);
 
-        //try find HolderWnd and notify it
-        HWND hNotifyWnd = mhs->hwnd;
-        LRESULT SMRes = ::SendMessage(hNotifyWnd, WM_LBUTTONDBLCLK_NOTIFY, 0, 0);
-        while( hNotifyWnd && WM_LBUTTONDBLCLK_NOTIFY_SUCCESS != SMRes){
-            hNotifyWnd = GetParent(hNotifyWnd);
-            SMRes = ::SendMessage(hNotifyWnd, WM_LBUTTONDBLCLK_NOTIFY, 0, 0);
+                //try find HolderWnd and notify it
+                HWND hNotifyWnd = mhs->hwnd;
+                LRESULT SMRes = ::SendMessage(hNotifyWnd, WM_MOUSE_EVENT_NOTIFY, wParam, 0);
+                while( hNotifyWnd && WM_MOUSE_EVENT_NOTIFY_SUCCESS != SMRes){
+                    hNotifyWnd = GetParent(hNotifyWnd);
+                    SMRes = ::SendMessage(hNotifyWnd, WM_MOUSE_EVENT_NOTIFY, wParam, 0);
+                }
+
+                AllowReceiveMessage = WM_MOUSEMOVE==wParam || (WM_MOUSE_EVENT_NOTIFY_SUCCESS != SMRes);
+                break;
+            }
         }
-
-        AllowReceiveMessage = (WM_LBUTTONDBLCLK_NOTIFY_SUCCESS != SMRes);
     }
 
     LRESULT NHRes = CallNextHookEx(NULL, nCode, wParam, lParam);
@@ -328,13 +333,6 @@ LRESULT CALLBACK VLCFullScreenWnd::FSWndWindowProc(HWND hWnd, UINT uMsg, WPARAM 
             delete fs_data;
             SetWindowLongPtr(hWnd, GWLP_USERDATA, 0);
             break;
-        case WM_MOUSEMOVE:{
-            if(fs_data->Last_WM_MOUSEMOVE_lParam!=lParam){
-                fs_data->Last_WM_MOUSEMOVE_lParam = lParam;
-                fs_data->NeedShowControls();
-            }
-            break;
-        }
         case WM_SHOWWINDOW:{
             if(FALSE==wParam){ //hidding
                 fs_data->UnRegisterEvents();
@@ -469,11 +467,6 @@ LRESULT CALLBACK VLCFullScreenWnd::FSControlsWndWindowProc(HWND hWnd, UINT uMsg,
 
             fs_data->CreateToolTip();
 
-            break;
-        }
-        case WM_MOUSEMOVE:{
-            fs_data->Last_WM_MOUSEMOVE_lParam = lParam;
-            fs_data->NeedShowControls();//not allow close controll window while mouse within
             break;
         }
         case WM_LBUTTONUP:{
@@ -911,7 +904,8 @@ void VLCFullScreenWnd::UnRegisterEvents()
 //VLCWindowsManager
 ///////////////////////
 VLCWindowsManager::VLCWindowsManager(HMODULE hModule)
-    :_hModule(hModule), _hWindowedParentWnd(0), _HolderWnd(0), _FSWnd(0), _b_new_messages_flag(false)
+    :_hModule(hModule), _hWindowedParentWnd(0), _HolderWnd(0), _FSWnd(0),
+    _b_new_messages_flag(false), Last_WM_MOUSEMOVE_Pos(0)
 {
     VLCHolderWnd::RegisterWndClassName(hModule);
     VLCFullScreenWnd::RegisterWndClassName(hModule);
@@ -1019,3 +1013,19 @@ bool VLCWindowsManager::IsFullScreen()
     return 0!=_FSWnd && 0!=_HolderWnd && GetParent(_HolderWnd->getHWND())==_FSWnd->getHWND();
 }
 
+void VLCWindowsManager::OnMouseEvent(UINT uMouseMsg)
+{
+    switch(uMouseMsg){
+        case WM_LBUTTONDBLCLK:
+            ToggleFullScreen();
+            break;
+        case WM_MOUSEMOVE:{
+            DWORD MsgPos = GetMessagePos();
+            if(Last_WM_MOUSEMOVE_Pos != MsgPos){
+                Last_WM_MOUSEMOVE_Pos = MsgPos;
+                if(IsFullScreen()) _FSWnd->NeedShowControls();
+            }
+            break;
+        }
+    }
+}

@@ -98,7 +98,7 @@ private:
 
 private:
     VLCFullScreenWnd(HWND hWnd, VLCWindowsManager* WM)
-        : Last_WM_MOUSEMOVE_lParam(0),_WindowsManager(WM), hControlsWnd(0), hToolTipWnd(0),
+        : _WindowsManager(WM), hControlsWnd(0), hToolTipWnd(0),
          hNewMessageBitmap(0), hFSButtonBitmap(0), hFSButton(0),
          hPauseBitmap(0), hPlayBitmap(0), hPlayPauseButton(0), hVideoPosScroll(0),
          hVolumeBitmap(0), hVolumeMutedBitmap(0),hMuteButton(0),
@@ -130,14 +130,14 @@ private:
     void SyncVolumeSliderWithVLCVolume();
     void SetVLCVolumeBySliderPos(int CurScrollPos);
 
+public:
     void NeedShowControls();
+
+private:
     void NeedHideControls();
 
 private:
     void CreateToolTip();
-
-private:
-    LPARAM Last_WM_MOUSEMOVE_lParam;
 
 private:
     VLCWindowsManager* _WindowsManager;
@@ -207,6 +207,8 @@ public:
         {_b_new_messages_flag = Yes;};
     bool getNewMessageFlag() const
         {return _b_new_messages_flag;};
+public:
+    void OnMouseEvent(UINT uMouseMsg);
 
 private:
     HMODULE _hModule;
@@ -216,6 +218,9 @@ private:
     VLCFullScreenWnd* _FSWnd;
 
     bool _b_new_messages_flag;
+
+private:
+    DWORD Last_WM_MOUSEMOVE_Pos;
 };
 
 #endif //_WIN32
