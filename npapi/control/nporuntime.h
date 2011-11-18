@@ -29,7 +29,11 @@
 ** support framework for runtime script objects
 */
 
-#include <npapi.h>
+//on windows, to avoid including <npapi.h> 
+//from Microsoft SDK (rather then from Mozilla SDK),
+//#include it indirectly via <npfunctions.h>
+#include <npfunctions.h>
+
 #include <npruntime.h>
 
 static void RuntimeNPClassDeallocate(NPObject *npobj);

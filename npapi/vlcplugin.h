@@ -29,6 +29,10 @@
 #ifndef __VLCPLUGIN_H__
 #define __VLCPLUGIN_H__
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <vlc/vlc.h>
 
 // Setup XP_MACOSX, XP_UNIX, XP_WIN
@@ -80,7 +84,11 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
-#include <npapi.h>
+//on windows, to avoid including <npapi.h> 
+//from Microsoft SDK (rather then from Mozilla SDK),
+//#include it indirectly via <npfunctions.h>
+#include <npfunctions.h>
+
 #include <vector>
 #include <assert.h>
 

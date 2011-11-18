@@ -1871,12 +1871,13 @@ LibvlcLogoNPObject::invoke(int index, const NPVariant *args,
     return INVOKERESULT_NO_ERROR;
 }
 
-
+// MSVC++ doesn't support zero length arrays, so insert dummy "0"
 const NPUTF8 * const LibvlcDeinterlaceNPObject::propertyNames[] = {
+    0
 };
 enum LibvlcDeinterlaceNPObjectPropertyIds {
 };
-COUNTNAMES(LibvlcDeinterlaceNPObject,propertyCount,propertyNames);
+const int LibvlcDeinterlaceNPObject::propertyCount=0;
 
 RuntimeNPObject::InvokeResult
 LibvlcDeinterlaceNPObject::getProperty(int index, NPVariant &result)

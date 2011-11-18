@@ -26,6 +26,10 @@
 /*****************************************************************************
  * Preamble
  *****************************************************************************/
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "vlcplugin.h"
 
 #include "control/npolibvlc.h"
@@ -443,7 +447,11 @@ void VlcPlugin::event_callback(const libvlc_event_t* event,
     plugin->events.callback(event, npparams, npcount);
     NPN_PluginThreadAsyncCall(plugin->getBrowser(), eventAsync, plugin);
 #else
+#ifdef _MSC_VER
+#pragma message("NPN_PluginThreadAsyncCall not implemented yet.")
+#else
 #warning NPN_PluginThreadAsyncCall not implemented yet.
+#endif //_MSC_VER
     printf("No NPN_PluginThreadAsyncCall(), doing nothing.\n");
 #endif
 }
