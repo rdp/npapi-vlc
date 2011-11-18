@@ -22,6 +22,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
+#include "config.h"
+
 struct posidx_s { const char *n; size_t i; };
 static const posidx_s posidx[] = {
     { "center",        0 },

@@ -31,15 +31,13 @@
 
 #include <tchar.h>
 
+#ifdef __MINGW32__
 #include <_mingw.h>
+#endif
 
-#ifdef __MINGW64_VERSION_MAJOR
-
-#include <guiddef.h>
 #include <objsafe.h>
 
-#else /* ! __MINGW64_VERSION_MAJOR */
-
+#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64_VERSION_MAJOR)
 /*
 ** Widl generated code requires guiddef.h,
 ** which is not available under MinGW32
@@ -54,13 +52,11 @@
 /* CATID_InternetAware is declared as extern but not present in library */
 DEFINE_GUID(CATID_InternetAware, \
     0x0DE86A58, 0x2BAA, 0x11CF, 0xA2, 0x29, 0x00,0xAA,0x00,0x3D,0x73,0x52);
-static DEFINE_GUID(CATID_SafeForInitializing, \
-	0x7DD95802, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
-static DEFINE_GUID(CATID_SafeForScripting, \
-	0x7DD95801, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
-
-#endif /* __MINGW64_VERSION_MAJOR */
-
+DEFINE_GUID(CATID_SafeForInitializing, \
+    0x7DD95802, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
+DEFINE_GUID(CATID_SafeForScripting, \
+    0x7DD95801, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
+#endif
 
 using namespace std;
 
@@ -71,7 +67,7 @@ using namespace std;
 #define THREADING_MODEL "Apartment"
 #define MISC_STATUS     "131473"
 
-#define PROGID_STR COMPANY_STR"."PROGRAM_STR
+#define PROGID_STR TEXT(COMPANY_STR) TEXT(".") TEXT(PROGRAM_STR)
 
 #define GUID_STRLEN 39
 
@@ -152,7 +148,7 @@ static void UnregisterProgID(REFCLSID rclsid, unsigned int version)
     StringFromGUID2(rclsid, szCLSID, GUID_STRLEN);
 
     TCHAR progId[sizeof(PROGID_STR)+16];
-    _stprintf(progId, TEXT("%s.%u"), TEXT(PROGID_STR), version);
+    _stprintf(progId, TEXT("%s.%u"), PROGID_STR, version);
 
     SHDeleteKey(HKEY_CLASSES_ROOT, progId);
 
@@ -188,7 +184,7 @@ STDAPI DllUnregisterServer(VOID)
         pcr->Release();
     }
 
-    SHDeleteKey(HKEY_CLASSES_ROOT, TEXT(PROGID_STR));
+    SHDeleteKey(HKEY_CLASSES_ROOT, PROGID_STR);
 
     UnregisterProgID(CLSID_VLCPlugin, 2);
     UnregisterProgID(CLSID_VLCPlugin2, 1);
@@ -199,7 +195,7 @@ STDAPI DllUnregisterServer(VOID)
 static HRESULT RegisterClassID(HKEY hParent, REFCLSID rclsid, unsigned int version, BOOL isDefault, LPCTSTR path, size_t pathLen)
 {
     TCHAR progId[sizeof(PROGID_STR)+16];
-    _stprintf(progId, TEXT("%s.%u"), TEXT(PROGID_STR), version);
+    _stprintf(progId, TEXT("%s.%u"), PROGID_STR, version);
 
     TCHAR description[sizeof(DESCRIPTION)+16];
     _stprintf(description, TEXT("%s v%u"), TEXT(DESCRIPTION), version);
@@ -225,7 +221,7 @@ static HRESULT RegisterClassID(HKEY hParent, REFCLSID rclsid, unsigned int versi
         }
         if( isDefault )
         {
-            hProgKey = keyCreate(HKEY_CLASSES_ROOT, TEXT(PROGID_STR));
+            hProgKey = keyCreate(HKEY_CLASSES_ROOT, PROGID_STR);
             if( NULL != hProgKey )
             {
                 // default key value
@@ -253,12 +249,13 @@ static HRESULT RegisterClassID(HKEY hParent, REFCLSID rclsid, unsigned int versi
 
         // ToolboxBitmap32 key value
         {
-            TCHAR iconPath[pathLen+3];
+            std::vector<TCHAR> iconPathBuf(pathLen+3, 0);
+            TCHAR* iconPath = &iconPathBuf[0];
             memcpy(iconPath, path, sizeof(TCHAR)*pathLen);
             _tcscpy(iconPath+pathLen, TEXT(",1"));
             keyClose(keySetDef(keyCreate(hClassKey,
                 TEXT("ToolboxBitmap32")),
-                iconPath, sizeof(iconPath)));
+                iconPath, sizeof(TCHAR)*(_tcslen(iconPath)+1)));
         }
 
 #ifdef BUILD_LOCALSERVER
@@ -291,7 +288,7 @@ static HRESULT RegisterClassID(HKEY hParent, REFCLSID rclsid, unsigned int versi
         // VersionIndependentProgID key value
         keyClose(keySetDef(keyCreate(hClassKey,
                                      TEXT("VersionIndependentProgID")),
-                           TEXT(PROGID_STR), sizeof(TEXT(PROGID_STR))));
+                           PROGID_STR, sizeof(PROGID_STR)));
 
         // Version key value
         keyClose(keySetDef(keyCreate(hClassKey,TEXT("Version")),TEXT("1.0")));

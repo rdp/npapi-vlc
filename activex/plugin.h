@@ -24,6 +24,8 @@
 #ifndef __PLUGIN_H__
 #define __PLUGIN_H__
 
+#include "config.h"
+
 #include <ole2.h>
 #include <olectl.h>
 

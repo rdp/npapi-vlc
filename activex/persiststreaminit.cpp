@@ -25,6 +25,7 @@
 
 #include "utils.h"
 #include <map>
+#include <vector>
 
 #include <malloc.h>
 #include <wchar.h>
@@ -417,7 +418,8 @@ private:
         if( 0 == len )
             return E_INVALIDARG;
 
-        WCHAR propName[len + 1];
+        vector<WCHAR> propNameBuf(len + 1, 0);
+        WCHAR* propName = &propNameBuf[0];
 
         result = pStm->Read(propName, len*sizeof(WCHAR), NULL);
         if( FAILED(result) )
