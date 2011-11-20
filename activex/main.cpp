@@ -31,32 +31,22 @@
 
 #include <tchar.h>
 
-#ifdef __MINGW32__
-#include <_mingw.h>
-#endif
-
 #include <objsafe.h>
 
-#if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64_VERSION_MAJOR)
-/*
-** Widl generated code requires guiddef.h,
-** which is not available under MinGW32
-*/
-#undef GUID_EXT
-#define GUID_EXT
-#include <initguid.h>
-
-/*
-** Mingw32 do not declare those
-*/
-/* CATID_InternetAware is declared as extern but not present in library */
+#ifdef __MINGW32__
+# include <_mingw.h>
+# if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64_VERSION_MAJOR)
+#  undef GUID_EXT
+#  define GUID_EXT
+#  include <initguid.h>
 DEFINE_GUID(CATID_InternetAware, \
     0x0DE86A58, 0x2BAA, 0x11CF, 0xA2, 0x29, 0x00,0xAA,0x00,0x3D,0x73,0x52);
 DEFINE_GUID(CATID_SafeForInitializing, \
     0x7DD95802, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
 DEFINE_GUID(CATID_SafeForScripting, \
     0x7DD95801, 0x9882, 0x11CF, 0x9F, 0xA9, 0x00,0xAA,0x00,0x6C,0x42,0xC4);
-#endif
+#  endif /* __MINGW32_MAJOR_VERSION && !__MINGW64_VERSION_MAJOR */
+#endif /* __MINGW32__ */
 
 using namespace std;
 

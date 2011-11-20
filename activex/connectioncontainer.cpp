@@ -30,18 +30,17 @@
 #include <assert.h>
 #include <rpc.h>
 #include <rpcndr.h>
+#include <objidl.h>
 
 using namespace std;
 
 #ifdef __MINGW32__
-////////////////////////////////////////////////////////////////////////////////////////////////
-DEFINE_GUID(IID_IGlobalInterfaceTable,     0x00000146, 0x0000, 0x0000, 0xc0,0x00, 0x00,0x00,0x00,0x00,0x00,0x46);
-DEFINE_GUID(CLSID_StdGlobalInterfaceTable, 0x00000323, 0x0000, 0x0000, 0xc0,0x00, 0x00,0x00,0x00,0x00,0x00,0x46);
-
+# include <_mingw.h>
+# if defined(__MINGW32_MAJOR_VERSION) && !defined(__MINGW64_VERSION_MAJOR)
 const GUID  IID_IGlobalInterfaceTable = { 0x00000146, 0, 0, {0xc0, 0, 0, 0, 0, 0, 0, 0x46} };
+# endif /* __MINGW32_MAJOR_VERSION && !__MINGW64_VERSION_MAJOR */
 const CLSID CLSID_StdGlobalInterfaceTable = { 0x00000323, 0, 0, {0xc0, 0, 0, 0, 0, 0, 0, 0x46} };
-////////////////////////////////////////////////////////////////////////////////////////////////
-#endif
+#endif /* __MINGW32__ */
 
 /* this function object is used to return the value from a map pair */
 struct VLCEnumConnectionsDereference
