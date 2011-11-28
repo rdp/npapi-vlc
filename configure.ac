@@ -208,6 +208,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([
    # endif
    # define XP_UNIX 1
    #endif
+   #include <stdint.h>
    #include <npapi.h>
   const char *NPP_GetMIMEDescription(void);
 ])],[
