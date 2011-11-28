@@ -191,6 +191,7 @@ AC_CHECK_HEADERS(npruntime.h, [
   dnl if not found
   AC_MSG_ERROR([Please install the Mozilla development tools, required headers were not found.])
   ], [
+  #include <stdint.h>
   #if HAVE_NPAPI_H
    #include <npapi.h>
   #endif
