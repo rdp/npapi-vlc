@@ -1,4 +1,12 @@
-Changes between 1.1.4 and 1.2.0-git:
-------------------------------------
+Changes between 1.1.4 and 1.2.0:
+--------------------------------
 
-* Mozilla plugin separated from main VLC source.
+ * Mozilla and ActiveX plugin separated from main VLC source,
+   and merged in the same repo
+ * Fullscreen Interface on Win32 for both ActiveX and NPAPI.
+ * Many build fixes and improvements.
+ * Compilation under VS2008.
+ * Port to Win64.
+ * Interface for DVD control.
+ * Update to recent NPAPI headers.
+
