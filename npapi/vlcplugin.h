@@ -94,6 +94,16 @@
 
 #include "control/nporuntime.h"
 
+#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
+    typedef uint16 NPuint16_t;
+    typedef int16 NPint16_t;
+    typedef int32 NPint32_t;
+#else
+    typedef uint16_t NPuint16_t;
+    typedef int16_t NPint16_t;
+    typedef int32_t NPint32_t;
+#endif
+
 typedef struct {
 #if defined(XP_UNIX)
     pthread_mutex_t mutex;
@@ -198,11 +208,7 @@ HMODULE DllGetModule();
 class VlcPlugin
 {
 public:
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-             VlcPlugin( NPP, uint16 );
-#else
-             VlcPlugin( NPP, uint16_t );
-#endif
+    VlcPlugin( NPP, NPuint16_t );
     virtual ~VlcPlugin();
 
     NPError             init(int argc, char* const argn[], char* const argv[]);
@@ -254,11 +260,7 @@ public:
     vlc_toolbar_clicked_t getToolbarButtonClicked( int i_xpos, int i_ypos );
 #endif
 
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-    uint16    i_npmode; /* either NP_EMBED or NP_FULL */
-#else
-    uint16_t  i_npmode; /* either NP_EMBED or NP_FULL */
-#endif
+    NPuint16_t  i_npmode; /* either NP_EMBED or NP_FULL */
 
     /* plugin properties */
     int      b_stream;

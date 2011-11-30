@@ -28,6 +28,8 @@
 # include "config.h"
 #endif
 
+#include "vlcplugin.h"
+
 NPP_GET_MIME_CONST char * NPP_GetMIMEDescription( void );
 
 NPError NPP_Initialize( void );
@@ -37,13 +39,9 @@ jref NPP_GetJavaClass( void );
 #endif
 void NPP_Shutdown( void );
 
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-NPError NPP_New( NPMIMEType pluginType, NPP instance, uint16 mode, int16 argc,
-                 char* argn[], char* argv[], NPSavedData* saved );
-#else
-NPError NPP_New( NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc,
-                 char* argn[], char* argv[], NPSavedData* saved );
-#endif
+NPError NPP_New( NPMIMEType pluginType, NPP instance, NPuint16_t mode,
+                 NPint16_t argc, char* argn[], char* argv[],
+                 NPSavedData* saved );
 
 NPError NPP_Destroy( NPP instance, NPSavedData** save );
 
@@ -53,34 +51,20 @@ NPError NPP_SetValue( NPP instance, NPNVariable variable, void *value );
 NPError NPP_SetWindow( NPP instance, NPWindow* window );
 
 NPError NPP_NewStream( NPP instance, NPMIMEType type, NPStream *stream,
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-                       NPBool seekable, uint16 *stype );
-#else
-                       NPBool seekable, uint16_t *stype );
-#endif
+                       NPBool seekable, NPuint16_t *stype );
 NPError NPP_DestroyStream( NPP instance, NPStream *stream, NPError reason );
 void NPP_StreamAsFile( NPP instance, NPStream *stream, const char* fname );
 
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-int32 NPP_WriteReady( NPP instance, NPStream *stream );
-int32 NPP_Write( NPP instance, NPStream *stream, int32 offset,
-                 int32 len, void *buffer );
-#else
-int32_t NPP_WriteReady( NPP instance, NPStream *stream );
-int32_t NPP_Write( NPP instance, NPStream *stream, int32_t offset,
-                 int32_t len, void *buffer );
-#endif
+NPint32_t NPP_WriteReady( NPP instance, NPStream *stream );
+NPint32_t NPP_Write( NPP instance, NPStream *stream, NPint32_t offset,
+                 NPint32_t len, void *buffer );
 
 void NPP_URLNotify( NPP instance, const char* url,
                     NPReason reason, void* notifyData );
 void NPP_Print( NPP instance, NPPrint* printInfo );
 
 #ifdef XP_MACOSX
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-int16 NPP_HandleEvent( NPP instance, void * event );
-#else
-int16_t NPP_HandleEvent( NPP instance, void * event );
-#endif
+NPint16_t NPP_HandleEvent( NPP instance, void * event );
 #endif
 
 static char mimetype[] =

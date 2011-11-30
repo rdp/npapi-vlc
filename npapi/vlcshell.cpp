@@ -278,11 +278,7 @@ void NPP_Shutdown( void )
 }
 
 NPError NPP_New( NPMIMEType pluginType, NPP instance,
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-                 uint16 mode, int16 argc,
-#else
-                 uint16_t mode, int16_t argc,
-#endif
+                 NPuint16_t mode, NPint16_t argc,
                  char* argn[], char* argv[], NPSavedData* saved )
 {
     NPError status;
@@ -553,11 +549,7 @@ NPError NPP_SetWindow( NPP instance, NPWindow* window )
 }
 
 NPError NPP_NewStream( NPP instance, NPMIMEType type, NPStream *stream,
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-                       NPBool seekable, uint16 *stype )
-#else
-                       NPBool seekable, uint16_t *stype )
-#endif
+                       NPBool seekable, NPuint16_t *stype )
 {
     if( NULL == instance  )
     {
@@ -586,23 +578,14 @@ NPError NPP_NewStream( NPP instance, NPMIMEType type, NPStream *stream,
     return NPERR_GENERIC_ERROR;
 }
 
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-int32 NPP_WriteReady( NPP instance, NPStream *stream )
-#else
-int32_t NPP_WriteReady( NPP instance, NPStream *stream )
-#endif
+NPint32_t NPP_WriteReady( NPP instance, NPStream *stream )
 {
     /* TODO */
     return 8*1024;
 }
 
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-int32 NPP_Write( NPP instance, NPStream *stream, int32 offset,
-                 int32 len, void *buffer )
-#else
-int32_t NPP_Write( NPP instance, NPStream *stream, int32_t offset,
-                 int32_t len, void *buffer )
-#endif
+NPint32_t NPP_Write( NPP instance, NPStream *stream, NPint32_t offset,
+                     NPint32_t len, void *buffer )
 {
     /* TODO */
     return len;

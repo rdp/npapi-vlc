@@ -382,11 +382,7 @@ void EventObj::unhook_manager( void *userdata )
 /*****************************************************************************
  * VlcPlugin constructor and destructor
  *****************************************************************************/
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-VlcPlugin::VlcPlugin( NPP instance, uint16 mode ) :
-#else
-VlcPlugin::VlcPlugin( NPP instance, uint16_t mode ) :
-#endif
+VlcPlugin::VlcPlugin( NPP instance, NPuint16_t mode ) :
     i_npmode(mode),
     b_stream(0),
     b_autoplay(1),
