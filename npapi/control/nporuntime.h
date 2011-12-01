@@ -335,6 +335,8 @@ RuntimeNPClass<T>::RuntimeNPClass()
     getProperty    = &RuntimeNPClassGetProperty<T>;
     setProperty    = &RuntimeNPClassSetProperty<T>;
     removeProperty = &RuntimeNPClassRemoveProperty<T>;
+    enumerate      = 0;
+    construct      = 0;
 }
 
 template<class T>
