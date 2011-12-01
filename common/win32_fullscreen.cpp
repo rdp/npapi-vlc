@@ -49,7 +49,7 @@ void VLCHolderWnd::RegisterWndClassName(HINSTANCE hInstance)
 
     if( ! GetClassInfo(_hinstance, getClassName(), &wClass) )
     {
-        wClass.style          = 0;//CS_NOCLOSE|CS_DBLCLKS;
+        wClass.style          = CS_DBLCLKS;
         wClass.lpfnWndProc    = VLCHolderClassWndProc;
         wClass.cbClsExtra     = 0;
         wClass.cbWndExtra     = 0;
@@ -130,6 +130,10 @@ LRESULT CALLBACK VLCHolderWnd::VLCHolderClassWndProc(HWND hWnd, UINT uMsg, WPARA
             }
             break;
         }
+        case WM_MOUSEMOVE:
+        case WM_LBUTTONDBLCLK:
+            h_data->_WindowsManager->OnMouseEvent(uMsg);
+            break;
         case WM_MOUSE_EVENT_NOTIFY:{
             h_data->_WindowsManager->OnMouseEvent(wParam);
             return WM_MOUSE_EVENT_NOTIFY_SUCCESS;
